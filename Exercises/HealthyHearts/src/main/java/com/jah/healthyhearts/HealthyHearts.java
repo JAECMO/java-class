@@ -17,24 +17,32 @@ public class HealthyHearts {
          
      Scanner input = new Scanner(System.in);
      String ageString;
-     int ageInt;
+     int ageInt = 0;
      int maxHeartRate;
      int [] targetArray;
+     boolean isInteger = false;
      
-          while (true) {
+         while (true) {
 
-            try {
-                System.out.println("What is your age? ");
-                ageString = input.nextLine();
-                ageInt = Integer.parseInt(ageString);
+             try {
+                 System.out.println("What is your age? ");
+                 ageString = input.nextLine();
+                 isInteger = isInteger(ageString);
+                 ageInt = Integer.parseInt(ageString);
+                 
 
-                if (ageInt < 0 || ageInt > 125) {
-                    throw new NumberFormatException("Invalid input. Please only enter an age between 1 & 125.");
-                }
-                break;
-            } catch (NumberFormatException e) {
-                System.out.println("Please enter an integer number");
-            }
+                 if (ageInt < 1 || ageInt > 125) {
+                     throw new NumberFormatException("");
+                 }
+                 break;
+             } catch (NumberFormatException e) {
+
+                 if (!isInteger) {
+                     System.out.println("Please enter an integer number");
+                 } else if (ageInt < 1 || ageInt > 125) {
+                     System.out.println("Invalid input. Please only enter an age between 1 & 125.");
+                 }
+             }
 
         }//while
      maxHeartRate=maxhHeartRate(ageInt);
@@ -70,5 +78,13 @@ public class HealthyHearts {
         System.out.println("Your maximum heart rate should be "+ maxHeartRate + " beats per minute");
         System.out.println("Your target HR Zone is " + targetArray[0] + " - " + targetArray[1] + " beats per minute");
 
+    }
+    public static boolean isInteger(String input) {
+        try {
+            Integer.parseInt(input);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 }

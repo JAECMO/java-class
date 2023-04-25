@@ -13,7 +13,7 @@ import java.util.Scanner;
  * @author drjal
  */
 public class Interest_Calculator {
-    static boolean d;
+    
     public static void main(String [] args) {
     Scanner input = new Scanner(System.in);
     Object[] numbers = new Object[3];
@@ -24,10 +24,10 @@ public class Interest_Calculator {
     int yearsInt;
     Double rateDouble;
     double[] arrayTotal;
-     
+    
     
         while (true) {
-
+            boolean d = true;
             try {
                 System.out.println("How much do you want to invest?: ");
                 capitalString = input.nextLine();
@@ -36,9 +36,10 @@ public class Interest_Calculator {
                 
                 System.out.println("How many years are you investing?: ");
                 yearsString = input.nextLine();
+                d = isInteger(yearsString);
                 yearsInt  = Integer.parseInt(yearsString);
                 numbers[1] = yearsInt;
-               d = isInteger(yearsString);
+                
                 
                 System.out.println("What is the annual interest rate % growth?: ");
                 rateString = input.nextLine();
@@ -47,7 +48,7 @@ public class Interest_Calculator {
 
                 for (Object number : numbers) {
                     if (Double.parseDouble(number.toString()) < 0) {
-                        throw new NumberFormatException("Invalid input. Please only enter positive numbers.");
+                        throw new NumberFormatException("");
                     }
                 }
                  break;
@@ -70,7 +71,7 @@ public class Interest_Calculator {
 
         for (int i = 0; i < yearsInt+1; i++) {
 
-            newArray[i] = capitalDouble * Math.pow(1 + (rateDouble / 100), 4*j);
+            newArray[i] = capitalDouble * Math.pow(1 + (rateDouble / 400), 4*j);
             j++;
         }
 
