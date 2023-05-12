@@ -21,15 +21,16 @@ import java.util.Set;
  */
 public class StateCapitals2 {
     public static void main(String[] args) throws IOException {
+        Scanner input = new Scanner(System.in);
         HashMap<String, String> stateCapitalMap = new HashMap<>();
+       
         Scanner sc = new Scanner(new BufferedReader(new FileReader("StateCapitals.txt")));
 // go through the file line by line
         while (sc.hasNextLine()) {
             
             String[] currentLine = sc.nextLine().split("::");
             stateCapitalMap.put(currentLine[0], currentLine[1]);
-            
- 
+          
         }//while
         
         System.out.println(stateCapitalMap.size() + " STATES & CAPITALS ARE LOADED.");
@@ -50,11 +51,26 @@ public class StateCapitals2 {
             i++;
         }
         
-         Iterator<String> iterator = stateCapitalMap.keySet().iterator();
-         String firstKey = iterator.next();
+        Object[] keys = stateNames.toArray();
+
+        // Generate a random index between 0 and keys.length-1
+        Random random = new Random();
+        int randomIndex = random.nextInt(keys.length);
+
+        // Select a random key from the array and print it
+        String randomKey = (String) keys[randomIndex];
+        System.out.println("Random key: " + randomKey);
 
         
-        System.out.println("\n"+ "READY TO TEST YOUR KNOWLEDGE? WHAT IS THE CAPITAL OF "+ "'"+firstKey+"'" +"?");
+        System.out.println("\n"+ "READY TO TEST YOUR KNOWLEDGE? WHAT IS THE CAPITAL OF "+ "'"+randomKey+"'" +"?");
+        String readString = input.nextLine();
         
+            if (stateCapitalMap.get(randomKey).equalsIgnoreCase(readString)) {
+                System.out.println("NICE WORK! " + readString + " IS CORRECT!");
+
+            } else {
+                System.out.println("Wrong, better luck next time!");
+            }
+
     }
 }

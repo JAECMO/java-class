@@ -1,0 +1,2 @@
+Smith::John::45 rue Einstein::Montreal::QC::123365
+Wonder::Alice::963 sherbrooke street::Laval::ON::665488
