@@ -91,14 +91,11 @@ public class ClassRosterView {
         io.print("=== Remove Student ===");
     }
 
-    public void displayRemoveResult(Student studentRecord) {
-        if (studentRecord != null) {
-            io.print("Student successfully removed.");
-        } else {
-            io.print("No such student.");
-        }
+    public void displayRemoveSuccessBanner() {
+        io.print("Student successfully removed.");
         io.readString("Please hit enter to continue.");
     }
+    
     public void displayExitBanner() {
         io.print("Good Bye!!!");
     }

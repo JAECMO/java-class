@@ -8,6 +8,7 @@ package com.jah.dvdlibrary.dto;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  *
@@ -26,6 +27,57 @@ public class DVD {
     public DVD(String title) {
         this.title = title;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + Objects.hashCode(this.title);
+        hash = 37 * hash + Objects.hashCode(this.releaseDate);
+        hash = 37 * hash + Objects.hashCode(this.mpaaRating);
+        hash = 37 * hash + Objects.hashCode(this.director);
+        hash = 37 * hash + Objects.hashCode(this.studio);
+        hash = 37 * hash + (int) (Double.doubleToLongBits(this.rating) ^ (Double.doubleToLongBits(this.rating) >>> 32));
+        hash = 37 * hash + Objects.hashCode(this.note);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final DVD other = (DVD) obj;
+        if (Double.doubleToLongBits(this.rating) != Double.doubleToLongBits(other.rating)) {
+            return false;
+        }
+        if (!Objects.equals(this.title, other.title)) {
+            return false;
+        }
+        if (!Objects.equals(this.mpaaRating, other.mpaaRating)) {
+            return false;
+        }
+        if (!Objects.equals(this.director, other.director)) {
+            return false;
+        }
+        if (!Objects.equals(this.studio, other.studio)) {
+            return false;
+        }
+        if (!Objects.equals(this.note, other.note)) {
+            return false;
+        }
+        if (!Objects.equals(this.releaseDate, other.releaseDate)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
     
     //no set title because title is the key of our map
 
@@ -86,5 +138,11 @@ public class DVD {
         }
      
     }
+
+    @Override
+    public String toString() {
+        return "DVD{" + "title=" + title + ", releaseDate=" + releaseDate + ", mpaaRating=" + mpaaRating + ", director=" + director + ", studio=" + studio + ", rating=" + rating + ", note=" + note + '}';
+    }
+    
 
 }

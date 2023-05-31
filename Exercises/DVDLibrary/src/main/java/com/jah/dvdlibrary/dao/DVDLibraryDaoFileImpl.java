@@ -25,7 +25,17 @@ import java.util.Scanner;
  */
 public class DVDLibraryDaoFileImpl implements DVDLibraryDao {
     
-    public static final String DVD_LIST_FILE = "DVDLibrary.txt";
+    private final String DVD_LIST_FILE;
+
+    public DVDLibraryDaoFileImpl() {
+        DVD_LIST_FILE = "DVDLibrary.txt";
+    }
+
+    public DVDLibraryDaoFileImpl(String DVDLibraryTextFile) {
+        DVD_LIST_FILE = DVDLibraryTextFile;
+    }
+    
+    
     public static final String DELIMITER = "::";
     
     private Map<String, DVD> dvds = new HashMap<>();
