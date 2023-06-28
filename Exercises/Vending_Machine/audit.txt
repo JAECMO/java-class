@@ -1,0 +1,4 @@
+2023-06-28T09:59:27.713295500 : Item Chocolate Bar was bought.Inventory is now equal to 6
+2023-06-28T10:03:53.184829600 : Item Popcorn was bought.Inventory is now equal to 1
+2023-06-28T10:04:03.454733100 : Item Popcorn was bought.Inventory is now equal to 0
+2023-06-28T10:41:18.817071100 : Item Pretzels was bought.Inventory is now equal to 5

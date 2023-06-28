@@ -13,11 +13,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -83,6 +88,151 @@ public class DVDLibraryDaoFileImpl implements DVDLibraryDao {
          return new ArrayList(dvds.keySet());
     }
     
+    @Override
+    public Map<LocalDate, List<DVD>> findDvdLastNYears(int yearsNb) throws DVDLibraryDaoException {
+        loadDVDList();
+        LocalDate today = LocalDate.now();
+        int releaseYearLimit = today.getYear() - yearsNb;
+        List<DVD> dvdsList = new ArrayList(dvds.values());
+        Map<LocalDate, List<DVD>> dvdByYear = dvdsList.stream().filter((p) -> p.getReleaseDate().getYear() >= releaseYearLimit)
+                .collect(Collectors.groupingBy((p) -> p.getReleaseDate()));
+        return dvdByYear;
+    }
+    
+    @Override
+    public List<DVD> findDvdMpaaRating(String ratingMpaa) throws DVDLibraryDaoException {
+        loadDVDList();
+        List<DVD> dvdsList = new ArrayList(dvds.values());
+        return dvdsList.stream().
+                filter((d) -> d.getMpaaRating().equals(ratingMpaa))
+                .collect(Collectors.toList());
+    }
+   
+    @Override
+    public Map<String, List<DVD>> findDvdDirector(String directorName) throws DVDLibraryDaoException {
+        loadDVDList();
+        List<DVD> dvdsList = new ArrayList(dvds.values());
+        Map<String, List<DVD>> dvdByDirector = dvdsList.stream().
+                filter((d) -> d.getDirector().equals(directorName)).
+                collect(Collectors.groupingBy((p) -> p.getMpaaRating()));
+        return dvdByDirector;
+    }
+    
+    @Override
+    public List<DVD> findDvdStudio(String studioName) throws DVDLibraryDaoException {
+        loadDVDList();
+        List<DVD> dvdsList = new ArrayList(dvds.values());
+        return dvdsList.stream().
+                filter((d) -> d.getStudio().equals(studioName))
+                .collect(Collectors.toList());
+    }
+    
+    @Override
+    public String findDvdAvgAge() throws DVDLibraryDaoException {
+        String avgAge;
+        LocalDate today = LocalDate.now();
+        loadDVDList();
+        List<DVD> dvdsList = new ArrayList(dvds.values());
+        Double avgAgeDouble = dvdsList.stream().
+                mapToDouble((d) -> ChronoUnit.MONTHS.between(d.getReleaseDate(), today) / 12.0)
+                .average().orElse(Double.NaN);
+
+        if (avgAgeDouble.isNaN()) {
+            avgAge = "The collection is Empty";
+        } else {
+            avgAge = "The Average age is " + String.format("%.2f", avgAgeDouble) + " years";
+        }
+
+        return avgAge;
+    }
+    
+    @Override
+    public List<DVD> findDvdNewest() throws DVDLibraryDaoException {
+
+        String newestDvd;
+        LocalDate today = LocalDate.now();
+
+        loadDVDList();
+        List<DVD> dvdsList = new ArrayList(dvds.values());
+        List<String> datesListStr = dvdsList.stream().
+                map((d) -> d.getReleaseDate().toString())
+                .collect(Collectors.toList());
+
+        List<LocalDate> datesList = datesListStr.stream()
+                .map((d) -> LocalDate.parse(d))
+                .collect(Collectors.toList());
+
+        Optional<LocalDate> mostRecent = datesList.stream()
+                .max(LocalDate::compareTo);
+
+        if (mostRecent.isPresent()) {
+            newestDvd = "" + mostRecent.get();
+        } else {
+            newestDvd = today.toString();
+        }
+
+        List<DVD> dvdNewestList = dvdsList.stream().
+                filter((d) -> d.getReleaseDate().equals(LocalDate.parse(newestDvd)))
+                .collect(Collectors.toList());
+
+        return dvdNewestList;
+    }
+    
+    @Override
+    public List<DVD> findDvdOldest() throws DVDLibraryDaoException {
+
+        String oldestDvd;
+        LocalDate today = LocalDate.now();
+
+        loadDVDList();
+        List<DVD> dvdsList = new ArrayList(dvds.values());
+        List<String> datesListStr = dvdsList.stream().
+                map((d) -> d.getReleaseDate().toString())
+                .collect(Collectors.toList());
+
+        List<LocalDate> datesList = datesListStr.stream()
+                .map((d) -> LocalDate.parse(d))
+                .collect(Collectors.toList());
+
+        Optional<LocalDate> lessRecent = datesList.stream()
+                .min(LocalDate::compareTo);
+
+        if (lessRecent.isPresent()) {
+            oldestDvd = "" + lessRecent.get();
+        } else {
+            oldestDvd = today.toString();
+        }
+
+        List<DVD> dvdNewestList = dvdsList.stream().
+                filter((d) -> d.getReleaseDate().equals(LocalDate.parse(oldestDvd)))
+                .collect(Collectors.toList());
+
+        return dvdNewestList;
+    }
+    
+    @Override
+    public String findAvgNotes() throws DVDLibraryDaoException {
+        String avgNotes;
+        loadDVDList();
+        List<DVD> dvdsList = new ArrayList(dvds.values());
+        List<DVD> dvdsNoteList = dvdsList.stream().
+                filter((d) -> !d.getNote().equals("\"No reviews\""))
+                .collect(Collectors.toList());
+
+        Double dvdsListSize = dvdsList.size() * 1.0;
+        Double dvdsNoteListSize = dvdsNoteList.size() * 1.0;
+
+        Double avgNotesDouble = dvdsNoteListSize / dvdsListSize;
+
+        if (avgNotesDouble.isNaN()) {
+            avgNotes = "The collection is Empty";
+        } else {
+            avgNotes = "The Average number of notes is " + String.format("%.2f", avgNotesDouble) + " per DVD";
+        }
+
+        return avgNotes;
+
+    }
     
     private DVD unmarshallAddress(String dvdAsText) {
 

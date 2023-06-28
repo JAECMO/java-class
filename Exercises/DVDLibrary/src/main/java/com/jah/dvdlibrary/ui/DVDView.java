@@ -5,9 +5,12 @@
  */
 package com.jah.dvdlibrary.ui;
 
+import com.jah.dvdlibrary.dao.DVDLibraryDaoException;
 import com.jah.dvdlibrary.dto.DVD;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -28,9 +31,25 @@ public class DVDView {
         io.print("4. List All DVDs");
         io.print("5. View Info about a DVD");
         io.print("6. Search for a DVD by Title");
-        io.print("7. Exit");
+        io.print("7. Advanced search");
+        io.print("8. Exit");
 
-        return io.readInt("Please select from the above choices.", 1, 7);
+        return io.readInt("Please select from the above choices.", 1, 8);
+    }
+     
+      public int printMenuAndGetSelectionAdvancedSearch() {
+        io.print("Main Menu");
+        io.print("1. Find all movies released in the last N years");
+        io.print("2. Find all the movies with a given MPAA rating");
+        io.print("3. Find all the movies by a given director");
+        io.print("4. Find all the movies released by a particular studio");
+        io.print("5. Find the average age of the movies in the collection");
+        io.print("6. Find the newest movie in your collection");
+        io.print("7. Find the oldest movie in your collection");
+        io.print("8. Find the average number of notes associated with movies in your collection");
+        io.print("9. Exit");
+
+        return io.readInt("Please select from the above choices.", 1, 9);
     }
      
      public DVD getNewDVDInfo() {
@@ -54,7 +73,9 @@ public class DVDView {
         return currentDVD;
     }
    
-    public DVD getUpdatedDVDInfo(DVD dvd) {
+    public DVD getUpdatedDVDInfo(DVD dvd)  {
+        
+        if (dvd != null){
 
         String menu = "Select from the following numbers the info to edit:\n"+ "1. release date\n" + "2. mpaaRating\n" + "3. director name\n" + "4. studio name\n" + "5. rating\n" + "6. note";
         
@@ -94,12 +115,41 @@ public class DVDView {
                keepGoing = io.readboolean(prompt);
 
         }//while
+        }
         
         return dvd;
      }
      
      public String getTitle() {
         return io.readString("Please enter the title of the DVD.");
+    }
+     
+     public int getNumberOfYears(){
+         return io.readInt("Please enter the number of years.");
+     }
+     
+      public String getMPAArating(){
+         return io.readMpaaRating("Please enter the MPAA rating (G,PG,PG-13,R,NC-17):");
+     }
+      
+     public String getDirectorName() {
+        String directorName;
+        directorName = io.readString("Please enter the director name.");
+        while (directorName.isEmpty() || directorName.isBlank()) {
+            directorName = io.readString("There was no entry." + "\n" + "Please enter the director name.");
+        }
+        io.print("\n");
+        return directorName;
+    }
+
+    public String getStudioName() {
+        String studioName;
+        studioName = io.readString("Please enter the studio name.");
+        while (studioName.isEmpty() || studioName.isBlank()) {
+            studioName = io.readString("There was no entry." + "\n" + "Please enter the studio name.");
+        }
+        io.print("\n");
+        return studioName;
     }
      
      public void displayCreateDVDBanner() {
@@ -112,10 +162,11 @@ public class DVDView {
     }
     
      public void displayDisplayAllBanner() {
-        io.print("=== Display All Addresses ===");
+        io.print("=== Display All DVDs ===");
     }
      
       public void displayDVDList(List<DVD> dvdList) {
+          
         for (DVD currentDVD : dvdList) {
             String dvdInfo = String.format("%s" +"\n%s," + " %s," + " %s," + " %s," + " %s" +", %s\n",
                     currentDVD.getTitle(),
@@ -128,6 +179,68 @@ public class DVDView {
             io.print(dvdInfo);
         }
         io.readString("Please hit enter to continue.");
+    }
+      
+    public void displayOnlyDVDList(List<DVD> dvdList) {
+
+        if (!dvdList.isEmpty()) {
+            for (DVD currentDVD : dvdList) {
+                String dvdInfo = String.format("%s" + "\n%s," + " %s," + " %s," + " %s," + " %s" + ", %s\n",
+                        currentDVD.getTitle(),
+                        currentDVD.getReleaseDate(),
+                        currentDVD.getMpaaRating(),
+                        currentDVD.getDirector(),
+                        currentDVD.getStudio(),
+                        currentDVD.getRating(),
+                        currentDVD.getNote());
+                io.print(dvdInfo);
+            }
+        } else {
+            io.print("There are no DVDs corresponding to your selection");
+        }
+        io.print("\n");
+    }
+      
+    
+    public void displayMapDvdLastNYears(Map<LocalDate, List<DVD>> dvdsByYear) {
+        if (!dvdsByYear.isEmpty()) {
+            io.print("===============================");
+            io.print("Release Date       Title");
+            io.print("===============================");
+            dvdsByYear.forEach((releaseDate, dvdList) -> {
+                String formattedDate = releaseDate.toString();
+                dvdList.forEach(dvd -> {
+                    String dvdInfo = String.format("%s" + "%s," + " %s," + " %s," + " %s," + " %s" + ", %s\n",
+                            dvd.getTitle(),
+                            dvd.getReleaseDate(),
+                            dvd.getMpaaRating(),
+                            dvd.getDirector(),
+                            dvd.getStudio(),
+                            dvd.getRating(),
+                            dvd.getNote());
+
+                    String paddedDate = String.format("%-15s", formattedDate);
+                    io.print(paddedDate + " " + dvdInfo);
+                });
+            });
+        } else {
+            io.print("There are no DVDs corresponding to this period");
+        }
+        io.print("\n");
+
+    }
+   
+    public void displayMapDvdDirector(Map<String, List<DVD>> dvdsByDirector) {
+
+        if (!dvdsByDirector.isEmpty()) {
+            dvdsByDirector.forEach((ratingMpaa, dvdList) -> {
+                io.print("MPAA Rating as " + ratingMpaa);
+                displayOnlyDVDList(dvdList);
+            });
+        } else {
+            io.print("No DVD corresponds to the selected director");
+            io.print("\n");
+        }
     }
       
       public void displayDisplayDVDBanner() {
@@ -186,20 +299,88 @@ public class DVDView {
         io.print("=== Edit DVD ===");
     }
     
-    public void displayEditDVDSuccessBanner(String title) {
-        io.print("DVD with title " + title + " was successfully edited");
+    public void displayEditDVDSuccessBanner(String title , DVD updatedDVD) {   
+         if (updatedDVD != null) {
+            io.print("DVD with title " + title + " was successfully edited");
+        } else {
+            io.print("No such DVD");
+        }
+        io.readString("Please hit enter to continue.");
     }
     
     public void displayErrorMessage(String errorMsg) {
         io.print("=== ERROR ===");
         io.print(errorMsg);
     }
+
+    public void displayAdvancedSearchBanner() {
+        io.print("=== Advanced Search ===");
+    }
+
+    public void displayFindDvdLastYearBanner() {
+        io.print("=== Search DVDs from Last N years ===");
+    }
+
+    public void displayFindDvdMpaaRatingBanner() {
+        io.print("=== Search DVDs by MPAA rating  ===");
+    }
     
+    public void displayDVDAvgAgeBanner() {
+        io.print("=== Average age of movies in the collection  ===");
+        
+    }
+    
+     public void displayDVDAvgAge(String avgAge) {
+        io.print(avgAge);
+        io.print("\n");
+        
+    }
+     
+     public void displayDVDAvgNotesBanner() {
+        io.print("=== Average number of notes per DVD in the collection  ===");
+        
+    }
+     
+     public void displayDVDAvgNotes(String avgNotes) {
+        io.print(avgNotes);
+        io.print("\n");
+        
+    }
+
+    public void displayDVDListMpaaBanner(String ratingMpaa) {
+        io.print("=== List of DVDs with MPAA rating as " + ratingMpaa + " ===");
+    }
+    
+    public void displayDVDListStudioBanner(String studioName){
+         io.print("=== List of DVDs released by " + studioName + " ===");
+    }
+
+    public void displayFindDvdDirectorBanner() {
+        io.print("=== Search DVDs by director  ===");
+    }
+    
+    public void displayFindDvdStudioBanner() {
+        io.print("=== Search DVDs by studio  ===");
+    }
+    
+    public void displayMapDvdDirectorBanner(String directorName) {
+        io.print("=== List of DVDs by " + directorName + " ===");
+        io.print("\n");
+    }
+    
+     public void displayDvdNewestBanner() {
+        io.print("=== List of most recent DVDs  ===");
+    }
+     
+    public void displayDvdOldestBanner() {
+        io.print("=== List of oldest DVDs  ===");
+    }
+
     public void displayExitBanner() {
         io.print("Good Bye!!!");
     }
 
-     public void displayUnknownCommandBanner() {
+    public void displayUnknownCommandBanner() {
         io.print("Unknown Command!!!");
     }
     

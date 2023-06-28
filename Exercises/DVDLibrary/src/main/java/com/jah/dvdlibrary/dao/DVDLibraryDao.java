@@ -8,6 +8,7 @@ package com.jah.dvdlibrary.dao;
 import com.jah.dvdlibrary.dto.DVD;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -17,22 +18,47 @@ public interface DVDLibraryDao {
     
     DVD addDVD(String title, DVD dvd)
             throws DVDLibraryDaoException;
-    
+
     List<DVD> getAllDVDs()
             throws DVDLibraryDaoException;
-    
+
     List<String> getAllDVDTitles()
             throws DVDLibraryDaoException;
+
+    DVD removeDVD(String title)
+            throws DVDLibraryDaoException;
+
+    DVD getDVD(String title)
+            throws DVDLibraryDaoException;
+
+    DVD editDVD(String title, DVD dvd)
+            throws DVDLibraryDaoException;
+
+    Map<LocalDate, List<DVD>> findDvdLastNYears(int yearsNb)
+            throws DVDLibraryDaoException;
+
+    List<DVD> findDvdMpaaRating(String ratingMpaa)
+            throws DVDLibraryDaoException;
+
+    Map<String, List<DVD>> findDvdDirector(String directorName)
+            throws DVDLibraryDaoException;
+
+    List<DVD> findDvdStudio(String studioName)
+            throws DVDLibraryDaoException;
+
+    String findDvdAvgAge()
+            throws DVDLibraryDaoException;
     
-     DVD removeDVD(String title)
+    List<DVD> findDvdNewest()
             throws DVDLibraryDaoException;
-     
-     DVD getDVD(String title)
+    
+    List<DVD> findDvdOldest()
             throws DVDLibraryDaoException;
-     
-     DVD editDVD(String title, DVD dvd )
+    
+    String findAvgNotes()
             throws DVDLibraryDaoException;
-     
-     String verifyTitle(String title)
+            
+
+    String verifyTitle(String title)
             throws DVDLibraryDaoException;
 }
