@@ -40,7 +40,7 @@ public class ClassRosterDaoFileImplTest {
          String testFile = "testroster.txt";
         //use the FileWriter to quickly blank the file
         new FileWriter(testFile);
-        testDao = new ClassRosterDaoFileImpl(testFile); //initilising the DAO 
+        testDao = new ClassRosterDaoFileImpl(testFile); //initialising the DAO 
         //this ensures we are starting with a fresh, empty DAO object
      //Create our method test inputs
     

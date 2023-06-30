@@ -1,8 +1,8 @@
-Chocolate Bar::1.79::6
+Chocolate Bar::1.79::5
 Energy Drink::2.99::5
 chips::5.99::0
 Granola Bar::3.25::4
-Pretzels::1.49::5
+Pretzels::1.49::4
 Bottled Water::0.99::10
 Fruit Snacks::2.99::9
 Popcorn::4.49::0

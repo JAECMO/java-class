@@ -77,7 +77,7 @@ public class VendingMachineController {
                 BigDecimal amount = view.getAmount();
                 BigDecimal moneyLeft = service.moneyLeft(item, amount);
                 service.checkIfSufficientFunds(moneyLeft);
-                service.editItem(verifiedName, item);
+                service.editItemInventory(verifiedName, item);
                 int quarters = Change.getQuarter(moneyLeft);
                 int dimes = Change.getDime(moneyLeft);
                 int nickels = Change.getNickel(moneyLeft);

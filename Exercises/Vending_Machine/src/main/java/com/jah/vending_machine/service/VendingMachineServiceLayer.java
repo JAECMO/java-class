@@ -22,7 +22,7 @@ public interface VendingMachineServiceLayer {
     Item getItem(String name)
      throws VendingMachinePersistenceException,InsufficientFundsException,NoItemInventoryException;
     
-    Item editItem(String name,Item item)
+    Item editItemInventory(String name,Item item)
             throws VendingMachinePersistenceException;
     
     void checkInventory (Item item)

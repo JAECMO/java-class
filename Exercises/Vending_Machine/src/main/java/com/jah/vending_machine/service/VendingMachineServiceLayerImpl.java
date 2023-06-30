@@ -70,7 +70,7 @@ public class VendingMachineServiceLayerImpl implements VendingMachineServiceLaye
     }
 
     @Override
-    public Item editItem(String name, Item item) throws VendingMachinePersistenceException {
+    public Item editItemInventory(String name, Item item) throws VendingMachinePersistenceException {
         item.setInventory(item.getInventory()-1);
         Item updatedItem = dao.editItem(name, item);  
         auditDao.writeAuditEntry("Item " + item.getName() + " was bought.Inventory is now equal to "+item.getInventory());
