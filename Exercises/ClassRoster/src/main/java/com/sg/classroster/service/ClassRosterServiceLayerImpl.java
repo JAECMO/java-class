@@ -10,20 +10,24 @@ import com.jah.classroster.dao.ClassRosterDao;
 import com.jah.classroster.dao.ClassRosterPersistenceException;
 import com.jah.classroster.dto.Student;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author drjal
  */
+
 public class ClassRosterServiceLayerImpl implements ClassRosterServiceLayer{
     
     ClassRosterDao dao;
     private ClassRosterAuditDao auditDao;
-   
-public ClassRosterServiceLayerImpl(ClassRosterDao dao, ClassRosterAuditDao auditDao) {
-    this.dao = dao;
-    this.auditDao = auditDao;
-}
+    
+
+    public ClassRosterServiceLayerImpl(ClassRosterDao dao, ClassRosterAuditDao auditDao) {
+        this.dao = dao;
+        this.auditDao = auditDao;
+    }
 
     @Override
     public void createStudent(Student student) throws 

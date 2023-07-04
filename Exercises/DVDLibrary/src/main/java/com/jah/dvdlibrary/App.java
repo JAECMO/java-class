@@ -11,6 +11,8 @@ import com.jah.dvdlibrary.dao.DVDLibraryDaoFileImpl;
 import com.jah.dvdlibrary.ui.DVDView;
 import com.jah.dvdlibrary.ui.UserIO;
 import com.jah.dvdlibrary.ui.UserIOConsoleImpl;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  *
@@ -19,13 +21,18 @@ import com.jah.dvdlibrary.ui.UserIOConsoleImpl;
 public class App {
   public static void main(String[] args) {
     
-    UserIO myIo = new UserIOConsoleImpl();
-    DVDView myView = new DVDView(myIo);
-    DVDLibraryDao myDao = new DVDLibraryDaoFileImpl();
-    DVDLibraryController controller
-            = new DVDLibraryController(myDao, myView);
-
-    controller.run ();
+//    UserIO myIo = new UserIOConsoleImpl();
+//    DVDView myView = new DVDView(myIo);
+//    DVDLibraryDao myDao = new DVDLibraryDaoFileImpl();
+//    DVDLibraryController controller
+//            = new DVDLibraryController(myDao, myView);
+//
+//    controller.run ();.
+       ApplicationContext ctx
+                      = new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
+              DVDLibraryController controller
+                      = ctx.getBean("controller", DVDLibraryController.class);
+              controller.run();
     }
     
 }

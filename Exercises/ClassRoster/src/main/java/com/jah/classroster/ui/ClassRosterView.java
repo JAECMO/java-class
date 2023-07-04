@@ -7,15 +7,19 @@ package com.jah.classroster.ui;
 
 import com.jah.classroster.dto.Student;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author drjal
  */
+
 public class ClassRosterView {
     
     private UserIO io;
     
+
     public ClassRosterView(UserIO io) {
     this.io = io;
 }

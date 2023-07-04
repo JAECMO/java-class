@@ -12,17 +12,21 @@ import com.sg.classroster.service.ClassRosterDataValidationException;
 import com.sg.classroster.service.ClassRosterDuplicateIdException;
 import com.sg.classroster.service.ClassRosterServiceLayer;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
 /**
  *
  * @author drjal
  */
+
 public class ClassRosterController {
     
     private ClassRosterView view;
     private ClassRosterServiceLayer service;
     
+ 
     public ClassRosterController(ClassRosterServiceLayer service, ClassRosterView view) {
     this.service = service;
     this.view = view;

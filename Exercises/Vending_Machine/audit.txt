@@ -4,3 +4,4 @@
 2023-06-28T10:41:18.817071100 : Item Pretzels was bought.Inventory is now equal to 5
 2023-06-29T17:35:13.929568200 : Item Chocolate Bar was bought.Inventory is now equal to 5
 2023-06-30T16:33:37.698830700 : Item Pretzels was bought.Inventory is now equal to 4
+2023-07-03T17:02:37.443124800 : Item Candy Bar was bought.Inventory is now equal to 4
