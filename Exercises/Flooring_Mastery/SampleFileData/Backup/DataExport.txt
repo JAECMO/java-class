@@ -1,0 +1,4 @@
+OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total,OrderDate
+4,Jdoom dd.##,TX,4.45,Carpet,110.00,2.25,2.10,247.50,231.00,21.29,499.79,2023-07-23
+1,Dean Piul# ..#,TX,4.45,Carpet,100.00,2.25,2.10,225.00,210.00,19.36,454.36,2023-07-21
+3,Ju# kk.,CA,25.00,Tile,136.2,3.50,4.15,476.70,565.23,260.48,1302.41,2023-08-21

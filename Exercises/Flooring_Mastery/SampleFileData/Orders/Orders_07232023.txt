@@ -1,0 +1,2 @@
+OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total
+4,Jdoom dd.##,TX,4.45,Carpet,110.00,2.25,2.10,247.50,231.00,21.29,499.79

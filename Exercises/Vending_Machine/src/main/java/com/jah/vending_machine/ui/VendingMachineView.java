@@ -41,6 +41,30 @@ public class VendingMachineView {
      public void displayWrongInputMessage() {
         io.print("Wrong Input, type YES or NO");
     }
+     
+     public boolean choiceOfAction() {
+        boolean pass, hasErrors = false;
+
+        do {
+            String choice = displayChoiceOfAction().toUpperCase();
+            switch (choice) {
+                case "YES":
+                    pass = false;
+                    hasErrors = true;
+                    break;
+                case "NO":
+                    pass = false;
+                    hasErrors = false;
+                    break;
+                default:
+                    displayWrongInputMessage();
+                    pass = true;
+                    break;
+            }
+        } while (pass);
+        return hasErrors;
+    }
+     
      public String displayChoiceOfAction(){
      return io.readString("Do you wish to enter a new amount of money OR choose another item?(YES or NO)");
      }

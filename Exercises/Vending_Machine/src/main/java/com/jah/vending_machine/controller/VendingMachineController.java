@@ -88,35 +88,35 @@ public class VendingMachineController {
             } catch (NoItemInventoryException | InsufficientFundsException | VendingMachinePersistenceException e) {
                 view.displayErrorMessage(e.getMessage());
 
-                hasErrors = choiceOfAction();
+                hasErrors = view.choiceOfAction();
 
             }
         } while (hasErrors);
 
     }
     
-    private boolean choiceOfAction() {
-        boolean pass, hasErrors = false;
-
-        do {
-            String choice = view.displayChoiceOfAction().toUpperCase();
-            switch (choice) {
-                case "YES":
-                    pass = false;
-                    hasErrors = true;
-                    break;
-                case "NO":
-                    pass = false;
-                    hasErrors = false;
-                    break;
-                default:
-                    view.displayWrongInputMessage();
-                    pass = true;
-                    break;
-            }
-        } while (pass);
-        return hasErrors;
-    }
+//    private boolean choiceOfAction() {
+//        boolean pass, hasErrors = false;
+//
+//        do {
+//            String choice = view.displayChoiceOfAction().toUpperCase();
+//            switch (choice) {
+//                case "YES":
+//                    pass = false;
+//                    hasErrors = true;
+//                    break;
+//                case "NO":
+//                    pass = false;
+//                    hasErrors = false;
+//                    break;
+//                default:
+//                    view.displayWrongInputMessage();
+//                    pass = true;
+//                    break;
+//            }
+//        } while (pass);
+//        return hasErrors;
+//    }
      private void unknownCommand() {
         view.displayUnknownCommandBanner();
     }
