@@ -1,0 +1,31 @@
+/* Add border to the entire table */
+.table-bordered {
+    border: 1px solid black;
+}
+
+/* Add border to each table cell (column) */
+.table-bordered td,
+.table-bordered th {
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: none;
+    border-top: none;
+}
+
+.header-row {
+    background-color: darkgrey;
+}
+/*
+#dvdTable {
+    border-collapse: collapse;  Collapse cell borders 
+}*/
+
+#dvdTable th,td {
+    border-bottom: none; /* Remove bottom border of header row */
+    text-align: center;
+}
+
+
+
+
+

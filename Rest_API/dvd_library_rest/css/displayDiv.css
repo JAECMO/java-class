@@ -1,0 +1,7 @@
+#displayDetailsDiv .row {
+    padding-top: 10px; /* Adjust this value to control the top padding */
+    padding-bottom: 10px; /* Adjust this value to control the bottom padding */
+    line-height: 30px; /* Adjust this value to control the line height */
+    font-size: larger;
+    font-weight: bold;
+}

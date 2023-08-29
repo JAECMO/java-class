@@ -1,0 +1,7 @@
+.custom-hr {
+    margin-top: 0px;
+    border: none; /* Remove default border */
+    border-top: 1px solid #ccc; /* Add your own border style */
+}
+
+

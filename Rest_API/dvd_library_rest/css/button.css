@@ -1,0 +1,72 @@
+.custom-btn {
+    height: 45px;
+    margin-top: 20px;
+    /* Adjust this value to control the offset */
+    margin-bottom: 20px;
+    font-size: 20px;
+    /*Adjust this value to increase the button's size */
+    border: 3px solid #343a40;
+    /* Dark outline color */
+    border-radius: 0rem;
+    /* Sharp corners */
+    box-shadow:
+        4px 4px 8px rgba(0, 0, 0, 0.4),
+        /* Main shadow */
+        8px 8px 16px rgba(0, 0, 0, 0.2);
+    /* Additional shadow at an angle */
+    transition: box-shadow 0.3s;
+    /* Smooth transition for the shadow */
+    text-align: center; /* Center text horizontally */
+    line-height: 0px; /* Center text vertically */
+}
+
+.custom-btn:hover {
+    box-shadow:
+        6px 6px 10px rgba(0, 0, 0, 0.6),
+        /* Adjusted shadow on hover */
+        8px 8px 16px rgba(0, 0, 0, 0.2);
+    /* Additional shadow at an angle */
+}
+
+
+
+#searchCategory {
+
+    border: 3px solid #343a40;
+    /* Dark outline color */
+    border-radius: 0rem;
+    /* Sharp corners */
+    margin-top: 20px;
+    /* Adjust this value to control the offset */
+    font-size: 20px;
+    /*Adjust this value to increase the button's size */
+}
+
+#searchTerm {
+    border: 3px solid #343a40;
+    /* Dark outline color */
+    border-radius: 0rem;
+    /* Sharp corners */
+    margin-top: 20px;
+    /* Adjust this value to control the offset */
+    font-size: 20px;
+    /*Adjust this value to increase the button's size */
+}
+
+.editButton {
+    padding-right: 3px;
+}
+
+.deleteButton {
+    padding-left: 3px;
+}
+
+.titleButton,
+.editButton,
+.deleteButton {
+    text-decoration: underline;
+}
+
+.offset-button {
+    margin-left: 10px; /* Adjust the value to achieve the desired offset */
+}
