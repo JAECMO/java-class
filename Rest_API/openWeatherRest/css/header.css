@@ -1,0 +1,18 @@
+.custom-header{
+    font-size: 15px;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.custom-header input,
+.custom-header select,
+.custom-header button{
+    width: auto; 
+    font-size: 15px;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.custom-header h{
+    margin-right: 5px;
+}
