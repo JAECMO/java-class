@@ -8,6 +8,7 @@ package com.jah.hero.dao;
 import com.jah.hero.dao.HeroDaoDB.HeroMapper;
 import com.jah.hero.dto.Hero;
 import com.jah.hero.dto.Organization;
+import com.jah.hero.dto.SuperPower;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -33,12 +34,28 @@ public class OrganizationDaoDB implements OrganizationDao {
         try {
             final String SELECT_ORGANIZATION_BY_ID = "SELECT * FROM Organization WHERE organizationId = ?";
             Organization organization = jdbc.queryForObject(SELECT_ORGANIZATION_BY_ID, new OrganizationDaoDB.OrganizationMapper(), id);
-            organization.setMembers(getHeroesForOrganization(id));
+            List<Hero> heroes = getHeroesForOrganization(id);
+            associateSuperPower(heroes);
+            organization.setMembers(heroes);
+            
             return organization;
         } catch (DataAccessException ex) {
             return null;
         }
     }
+    
+     private SuperPower getSuperPowerForHero(int id) {
+        final String SELECT_SUPER_POWER_FOR_HERO = "SELECT s.* FROM SuperPower s "
+                + "JOIN Hero h ON h.superPowerId = s.superPowerId WHERE h.heroId = ?";
+        return jdbc.queryForObject(SELECT_SUPER_POWER_FOR_HERO, new SuperPowerDaoDB.SuperPowerMapper(), id);
+    }
+     
+     private void associateSuperPower(List<Hero> heroes) {
+        for (Hero hero : heroes) {
+            hero.setSuperPower(getSuperPowerForHero(hero.getHeroId()));
+        }
+    }
+
 
     private List<Hero> getHeroesForOrganization(int id) {
         final String SELECT_HEROES_FOR_ORGANIZATION = "SELECT h.* FROM Hero h "
@@ -77,13 +94,22 @@ public class OrganizationDaoDB implements OrganizationDao {
     @Override
     public List<Organization> getAllOrganizations() {
         final String GET_ALL_ORGANIZATIONS = "SELECT * FROM Organization";
-        return jdbc.query(GET_ALL_ORGANIZATIONS, new OrganizationDaoDB.OrganizationMapper());
+        
+        List<Organization> organizations = jdbc.query(GET_ALL_ORGANIZATIONS, new OrganizationDaoDB.OrganizationMapper());
+        
+        for(Organization organization : organizations){
+            List<Hero> heroes = getHeroesForOrganization(organization.getOrganizationId());
+            associateSuperPower(heroes);
+            organization.setMembers(heroes);
+        }
+        
+        return organizations;
     }
 
     @Override
     public void updateOrganization(Organization organization) {
         final String UPDATE_ORGANIZATION = "UPDATE Organization SET name = ?, description = ?, "
-                + "addressInfo = ?, contactInfo = ?, isHero = ? WHERE id = ?";
+                + "addressInfo = ?, contactInfo = ?, isHero = ? WHERE organizationId = ?";
         jdbc.update(UPDATE_ORGANIZATION,
                 organization.getName(),
                 organization.getDescription(),
@@ -112,7 +138,14 @@ public class OrganizationDaoDB implements OrganizationDao {
         int heroId = hero.getHeroId();
         final String GET_ORGANIZATION_FOR_HERO = "SELECT o.* FROM Organization o "
                 + "JOIN HeroOrganization ho ON ho.organizationId = o.organizationId WHERE ho.heroId = ?";
-        return jdbc.query(GET_ORGANIZATION_FOR_HERO, new OrganizationDaoDB.OrganizationMapper(), heroId);
+        List<Organization> organizations = jdbc.query(GET_ORGANIZATION_FOR_HERO, new OrganizationDaoDB.OrganizationMapper(), heroId);
+
+        for (Organization organization : organizations) {
+            List<Hero> heroes = getHeroesForOrganization(organization.getOrganizationId());
+            associateSuperPower(heroes);
+            organization.setMembers(heroes);
+        }
+        return organizations;
     }
 
     public static final class OrganizationMapper implements RowMapper<Organization> {
