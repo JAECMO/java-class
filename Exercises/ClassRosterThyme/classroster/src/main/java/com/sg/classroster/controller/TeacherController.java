@@ -38,36 +38,51 @@ public class TeacherController {
 
     @Autowired
     CourseDao courseDao;
-
+   
     Set<ConstraintViolation<Teacher>> violations = new HashSet<>();
 
     @GetMapping("teachers")
     public String displayTeachers(Model model) {
+        
         List<Teacher> teachers = teacherDao.getAllTeachers();
         model.addAttribute("teachers", teachers);
+        if(!violations.isEmpty()){
+        violations.clear();
+      
+        }
         model.addAttribute("errors", violations);
-        return "teachers";
+        return "teachers";  
+        
     }
 
     @PostMapping("addTeacher")
-    public String addTeacher(HttpServletRequest request) {
+    public String addTeacher(Teacher teacher,Model model,HttpServletRequest request) {
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
         String specialty = request.getParameter("specialty");
-
-        Teacher teacher = new Teacher();
-        teacher.setFirstName(firstName);
-        teacher.setLastName(lastName);
-        teacher.setSpecialty(specialty);
-
+     
         Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
         violations = validate.validate(teacher);
 
         if (violations.isEmpty()) {
+            teacher.setFirstName(firstName);
+            teacher.setLastName(lastName);
+            teacher.setSpecialty(specialty);
             teacherDao.addTeacher(teacher);
-        }
+         
+            return "redirect:/teachers";
+        } else {
+            List<Teacher> teachers = teacherDao.getAllTeachers();
+            model.addAttribute("teachers", teachers);
+//            model.addAttribute("firstNameTemp", firstName);
+//            model.addAttribute("lastNameTemp", lastName);
+//            model.addAttribute("specialtyTemp", specialty);
+            model.addAttribute("errors", violations);
+            return "teachers";
 
-        return "redirect:/teachers";
+        }
+            
+          
     }
 
     @GetMapping("deleteTeacher")
@@ -84,20 +99,47 @@ public class TeacherController {
         Teacher teacher = teacherDao.getTeacherById(id);
 
         model.addAttribute("teacher", teacher);
+        model.addAttribute("firstName", teacher.getFirstName());
+        model.addAttribute("lastName", teacher.getLastName());
+        model.addAttribute("specialty", teacher.getSpecialty());
+
+         if(!violations.isEmpty()){
+             violations.clear();
+        }
+        model.addAttribute("errors", violations);
+        
         return "editTeacher";
     }
 
     @PostMapping("editTeacher")
-    public String performEditTeacher(HttpServletRequest request) {
+    public String performEditTeacher(Model model,HttpServletRequest request) {
         int id = Integer.parseInt(request.getParameter("id"));
         Teacher teacher = teacherDao.getTeacherById(id);
+        
+        String firstName = request.getParameter("firstName");
+        String lastName = request.getParameter("lastName");
+        String specialty = request.getParameter("specialty");
+        
+        teacher.setFirstName(firstName);
+        teacher.setLastName(lastName);
+        teacher.setSpecialty(specialty);
+        
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        violations = validate.validate(teacher);
 
-        teacher.setFirstName(request.getParameter("firstName"));
-        teacher.setLastName(request.getParameter("lastName"));
-        teacher.setSpecialty(request.getParameter("specialty"));
+        if (violations.isEmpty()) {
+            
+            teacherDao.updateTeacher(teacher);
+            return "redirect:/teachers";
+        } else {
+            model.addAttribute("teacher", teacher);
+            model.addAttribute("firstName", firstName);
+            model.addAttribute("lastName", lastName);
+            model.addAttribute("specialty", specialty);
+            model.addAttribute("errors", violations);
+            return "editTeacher";
 
-        teacherDao.updateTeacher(teacher);
+        }
 
-        return "redirect:/teachers";
     }
 }

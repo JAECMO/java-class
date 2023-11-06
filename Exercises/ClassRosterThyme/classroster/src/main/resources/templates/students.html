@@ -30,27 +30,54 @@
                 </div>
             </div>
                <div class="row m-4 border border-dark">
+                   <div class="col-12 m-1 text-center" 
+                     th:if="${!errors.isEmpty()}">
+                    <p class="alert alert-danger" th:each="error : ${errors}" 
+                       th:text="${error.message}">Error message</p>
+                </div>
                 <div class="col-3 text-center m-3">
                     <span class="h3">Add Student</span>
                 </div>
                 <div class="col-7 text-center m-3">
-                    <form action="addStudent" method="POST">
+                    <form action="addStudent" method="POST" onsubmit="clearFields('student')">
                         <div class="form-group row">
                             <label for="firstName" class="col-3 col-form-label">
                                 First Name</label>
                             <div class="col-9">
                                 <input type="text" name="firstName" 
-                                       id="firstName" class="form-control"/>
+                                       id="firstName" class="form-control"  oninput="saveToSession('firstName', 'student')"/>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="lastName" class="col-3 col-form-label">
+                            <label for="lastName" class="col-3 col-form-label" >
                                 Last Name</label>
                             <div class="col-9">
                                 <input type="text" name="lastName" 
-                                       id="lastName" class="form-control"/>
+                                       id="lastName" class="form-control" oninput="saveToSession('lastName', 'student')"/>
                             </div>
-                        </div>
+                            <script th:inline="javascript">
+    function saveToSession(fieldName, template) {
+        var key = template + '_' + fieldName; // Create a unique key for this template
+        var value = document.getElementById(fieldName).value;
+        sessionStorage.setItem(key, value);
+    }
+    function clearFields(template) {
+        var fNameValue = document.getElementById("firstName").value;
+        var lNameValue = document.getElementById("lastName").value;
+
+        if (fNameValue !== "" && lNameValue !== "") {
+            var key = template + '_firstName';
+            sessionStorage.removeItem(key);
+            key = template + '_lastName';
+            sessionStorage.removeItem(key);
+        }
+    }
+
+    // Retrieve values from session when the page loads
+    document.getElementById("firstName").value = sessionStorage.getItem("student_firstName");
+    document.getElementById("lastName").value = sessionStorage.getItem("student_lastName");
+</script>
+             </div>
                         <button type="submit" class="btn btn-primary">Add Student</button>
                     </form>
                 </div>

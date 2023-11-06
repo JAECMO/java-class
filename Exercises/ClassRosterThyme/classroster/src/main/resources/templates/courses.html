@@ -10,7 +10,7 @@
 
         <title>Course Manager</title>
     </head>
-    <body>
+    <body onload="retrieveSelectedOptions()">
         <!-- Main Body of Page -->
         <div class="container">
             <div class="row m-4">
@@ -30,17 +30,22 @@
                 </div>
             </div>
             <div class="row m-4 border border-dark">
+                <div class="col-12 m-1 text-center" 
+                     th:if="${!errors.isEmpty()}">
+                    <p class="alert alert-danger" th:each="error : ${errors}" 
+                       th:text="${error.message}">Error message</p>
+                </div>
                 <div class="col-3 text-center m-3">
                     <span class="h3">Add Course</span>
                 </div>
                 <div class="col-7 text-center m-3">
-                    <form action="addCourse" method="POST">
+                    <form action="addCourse" method="POST" onsubmit="clearFields()">
                         <div class="form-group row">
                             <label for="name" class="col-3 col-form-label">
                                 Name</label>
                             <div class="col-9">
                                 <input type="text" name="name" 
-                                       id="name" class="form-control"/>
+                                       id="name" class="form-control" oninput="saveToSession('name')"/>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -48,14 +53,14 @@
                                 Description</label>
                             <div class="col-9">
                                 <input type="text" name="description" 
-                                       id="description" class="form-control"/>
+                                       id="description" class="form-control" oninput="saveToSession('description')"/>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="teacher" class="col-3 col-form-label">
                                 Teacher</label>
                             <div class="col-9">
-                                <select id="teacher" name="teacherId" class="form-control" >
+                                <select id="teacher" name="teacherId" class="form-control" oninput="saveToSession('teacher')" >
                                     <option th:each="teacher : ${teachers}" 
                                             th:value="${teacher.id}" 
                                             th:text="${teacher.firstName + ' ' 
@@ -69,7 +74,7 @@
                                 Students</label>
                             <div class="col-9">
                                 <select multiple id="students" name="studentId" 
-                                        class="form-control" >
+                                        class="form-control" onchange="handleSelectionChange()">
                                     <option th:each="student : ${students}" 
                                             th:value="${student.id}" 
                                             th:text="${student.firstName + ' ' 
@@ -77,6 +82,52 @@
                                         Student Name</option>
                                 </select>
                             </div>
+                            <script th:inline="javascript">
+      function saveToSession(fieldName) {
+        var value = document.getElementById(fieldName).value;
+        sessionStorage.setItem(fieldName, value);
+    }
+     function handleSelectionChange() {
+      var selectElement = document.getElementById("students");
+      var selectedValues = Array.from(selectElement.selectedOptions).map(option => option.value);
+      
+      // Store the selected values in sessionStorage
+      sessionStorage.setItem("selectedStudents", JSON.stringify(selectedValues));
+    }
+    
+    function retrieveSelectedOptions() {
+      var selectElement = document.getElementById("students");
+      var selectedValues = JSON.parse(sessionStorage.getItem("selectedStudents")) || [];
+
+      selectedValues.forEach(value => {
+        var option = selectElement.querySelector(`option[value="${value}"]`);
+        if (option) {
+          option.selected = true;
+        }
+      });
+    }
+
+    function clearFields() {
+      var nameValue = document.getElementById("name").value;
+      var teacherValue = document.getElementById("teacher").value;
+      var selectedStudents = document.getElementById("students").value;
+
+      if(nameValue !== "" && selectedStudents !== "" && teacherValue !== ""  ){
+        sessionStorage.removeItem("name");
+        sessionStorage.removeItem("description");
+        sessionStorage.removeItem("teacher");
+        sessionStorage.clear("students");
+        
+    }
+            
+        } 
+
+    // Retrieve values from session when the page loads
+    document.getElementById("name").value = sessionStorage.getItem("name");
+    document.getElementById("description").value = sessionStorage.getItem("description");
+    document.getElementById("teacher").value = sessionStorage.getItem("teacher");
+
+</script>
                         </div>
                         <button type="submit" class="btn btn-primary">Add Course</button>
                     </form>

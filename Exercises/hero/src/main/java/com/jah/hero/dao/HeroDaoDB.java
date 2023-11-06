@@ -57,7 +57,7 @@ public class HeroDaoDB implements HeroDao {
 
     }
 
-    private void associateSuperPower(List<Hero> heroes) {
+    public void associateSuperPower(List<Hero> heroes) {
         for (Hero hero : heroes) {
             hero.setSuperPower(getSuperPowerForHero(hero.getHeroId()));
         }

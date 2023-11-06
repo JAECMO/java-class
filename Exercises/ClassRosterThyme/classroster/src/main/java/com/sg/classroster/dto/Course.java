@@ -8,6 +8,8 @@ package com.sg.classroster.dto;
 import java.util.List;
 import java.util.Objects;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -25,7 +27,10 @@ public class Course {
     @Size(max = 255, message = "Description must be fewer than 255 characters")
     private String description;
 
+    @NotNull(message = "Add at least one Teacher to the course")
     private Teacher teacher;
+    
+    @NotEmpty(message = "Add at least one Student to the course")
     private List<Student> students;
 
     public int getId() {

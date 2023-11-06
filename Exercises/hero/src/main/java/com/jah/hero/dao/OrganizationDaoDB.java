@@ -23,11 +23,15 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author drjal
  */
+
 @Repository
 public class OrganizationDaoDB implements OrganizationDao {
-
+    
     @Autowired
     JdbcTemplate jdbc;
+    
+    @Autowired
+    HeroDaoDB heroDaoDB;
 
     @Override
     public Organization getOrganization(int id) {
@@ -35,7 +39,7 @@ public class OrganizationDaoDB implements OrganizationDao {
             final String SELECT_ORGANIZATION_BY_ID = "SELECT * FROM Organization WHERE organizationId = ?";
             Organization organization = jdbc.queryForObject(SELECT_ORGANIZATION_BY_ID, new OrganizationDaoDB.OrganizationMapper(), id);
             List<Hero> heroes = getHeroesForOrganization(id);
-            associateSuperPower(heroes);
+           heroDaoDB.associateSuperPower(heroes); 
             organization.setMembers(heroes);
             
             return organization;
@@ -43,19 +47,6 @@ public class OrganizationDaoDB implements OrganizationDao {
             return null;
         }
     }
-    
-     private SuperPower getSuperPowerForHero(int id) {
-        final String SELECT_SUPER_POWER_FOR_HERO = "SELECT s.* FROM SuperPower s "
-                + "JOIN Hero h ON h.superPowerId = s.superPowerId WHERE h.heroId = ?";
-        return jdbc.queryForObject(SELECT_SUPER_POWER_FOR_HERO, new SuperPowerDaoDB.SuperPowerMapper(), id);
-    }
-     
-     private void associateSuperPower(List<Hero> heroes) {
-        for (Hero hero : heroes) {
-            hero.setSuperPower(getSuperPowerForHero(hero.getHeroId()));
-        }
-    }
-
 
     private List<Hero> getHeroesForOrganization(int id) {
         final String SELECT_HEROES_FOR_ORGANIZATION = "SELECT h.* FROM Hero h "
@@ -97,11 +88,7 @@ public class OrganizationDaoDB implements OrganizationDao {
         
         List<Organization> organizations = jdbc.query(GET_ALL_ORGANIZATIONS, new OrganizationDaoDB.OrganizationMapper());
         
-        for(Organization organization : organizations){
-            List<Hero> heroes = getHeroesForOrganization(organization.getOrganizationId());
-            associateSuperPower(heroes);
-            organization.setMembers(heroes);
-        }
+        associateSuperPowerToHeroes(organizations);
         
         return organizations;
     }
@@ -140,12 +127,17 @@ public class OrganizationDaoDB implements OrganizationDao {
                 + "JOIN HeroOrganization ho ON ho.organizationId = o.organizationId WHERE ho.heroId = ?";
         List<Organization> organizations = jdbc.query(GET_ORGANIZATION_FOR_HERO, new OrganizationDaoDB.OrganizationMapper(), heroId);
 
-        for (Organization organization : organizations) {
+        associateSuperPowerToHeroes(organizations);
+        return organizations;
+    }
+    
+    
+     private void associateSuperPowerToHeroes(List<Organization> organizations){
+        for(Organization organization : organizations){
             List<Hero> heroes = getHeroesForOrganization(organization.getOrganizationId());
-            associateSuperPower(heroes);
+            heroDaoDB.associateSuperPower(heroes);
             organization.setMembers(heroes);
         }
-        return organizations;
     }
 
     public static final class OrganizationMapper implements RowMapper<Organization> {
