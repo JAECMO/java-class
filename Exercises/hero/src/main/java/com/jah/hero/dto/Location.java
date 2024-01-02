@@ -5,19 +5,32 @@
  */
 package com.jah.hero.dto;
 
+import com.jah.hero.validation.Latitude;
+import com.jah.hero.validation.Longitude;
 import java.util.Objects;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 /**
  *
  * @author drjal
  */
 public class Location {
-    
+
     private int locationId;
+    @NotBlank(message = "Name must not be empty.")
+    @Size(max = 50, message = "Name must be at most 50 characters.")
     private String name;
+    @Size(max = 300, message = "Description must be at most 300 characters.")
     private String description;
+    @NotBlank(message = "Address must not be empty.")
+    @Size(max = 100, message = "Address must be at most 100 characters.")
     private String addressInfo;
+
+    @Latitude
     private double latitude;
+
+    @Longitude
     private double longitude;
 
     public int getLocationId() {
@@ -112,6 +125,5 @@ public class Location {
         }
         return true;
     }
-    
-    
+
 }

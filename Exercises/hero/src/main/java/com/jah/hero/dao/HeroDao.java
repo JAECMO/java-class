@@ -29,5 +29,9 @@ public interface HeroDao {
     List<Hero> getAllHeroesByLocation(Location location);
 
     List<Hero> getAllHeroesForOrganization(Organization organization);
+    
+    List<Hero> getAllHeroesForAllLocations();
+    
+    List<Hero> getNotSeenHeroes();
 
 }

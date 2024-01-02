@@ -85,10 +85,10 @@ public class LocationDaoDBTest {
     @AfterEach
     public void tearDown() {
     }
-
-    /**
-     * Test of getLocationById method, of class LocationDaoDB.
-     */
+//
+//    /**
+//     * Test of getLocationById method, of class LocationDaoDB.
+//     */
     @Test
     public void testAddAndGetLocationById() {
         Location location = new Location();
@@ -102,10 +102,10 @@ public class LocationDaoDBTest {
         Location fromDao = locationDao.getLocationById(location.getLocationId());
         assertEquals(location, fromDao);
     }
-
-    /**
-     * Test of getAllLocations method, of class LocationDaoDB.
-     */
+//
+//    /**
+//     * Test of getAllLocations method, of class LocationDaoDB.
+//     */
     @Test
     public void testGetAllLocations() {
         Location location = new Location();
@@ -158,10 +158,10 @@ public class LocationDaoDBTest {
 
         assertEquals(location, fromDao);
     }
-
-    /**
-     * Test of deleteLocationById method, of class LocationDaoDB.
-     */
+//
+//    /**
+//     * Test of deleteLocationById method, of class LocationDaoDB.
+//     */
     @Test
     public void testDeleteLocationById() {
         SuperPower superPower = new SuperPower();
@@ -199,10 +199,10 @@ public class LocationDaoDBTest {
         fromDao = locationDao.getLocationById(location.getLocationId());
         assertNull(fromDao);
     }
-
-    /**
-     * Test of getLocationsForHero method, of class LocationDaoDB.
-     */
+//
+//    /**
+//     * Test of getLocationsForHero method, of class LocationDaoDB.
+//     */
     @Test
     public void testGetLocationsForHero() {
         SuperPower superPower = new SuperPower();

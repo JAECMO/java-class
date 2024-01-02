@@ -84,10 +84,10 @@ public class SuperPowerDaoDBTest {
     @AfterEach
     public void tearDown() {
     }
-
-    /**
-     * Test of getSuperPowerById method, of class SuperPowerDaoDB.
-     */
+//
+//    /**
+//     * Test of getSuperPowerById method, of class SuperPowerDaoDB.
+//     */
     @Test
     public void testAddAndGetSuperPowerById() {
         SuperPower superPower = new SuperPower();
@@ -97,10 +97,10 @@ public class SuperPowerDaoDBTest {
         SuperPower fromDao = superPowerDao.getSuperPowerById(superPower.getSuperPowerId());
         assertEquals(superPower, fromDao);
     }
-
-    /**
-     * Test of getAllSuperPower method, of class SuperPowerDaoDB.
-     */
+//
+//    /**
+//     * Test of getAllSuperPower method, of class SuperPowerDaoDB.
+//     */
     @Test
     public void testGetAllSuperPower() {
         SuperPower superPower = new SuperPower();
@@ -117,10 +117,10 @@ public class SuperPowerDaoDBTest {
         assertTrue(superPowers.contains(superPower));
         assertTrue(superPowers.contains(superPower2));
     }
-
-    /**
-     * Test of updateSuperPower method, of class SuperPowerDaoDB.
-     */
+//
+//    /**
+//     * Test of updateSuperPower method, of class SuperPowerDaoDB.
+//     */
     @Test
     public void testUpdateSuperPower() {
         SuperPower superPower = new SuperPower();
@@ -139,10 +139,10 @@ public class SuperPowerDaoDBTest {
 
         assertEquals(superPower, fromDao);
     }
-
-    /**
-     * Test of deletesuperPower method, of class SuperPowerDaoDB.
-     */
+//
+//    /**
+//     * Test of deletesuperPower method, of class SuperPowerDaoDB.
+//     */
     @Test
     public void testDeletesuperPower() {
         SuperPower superPower = new SuperPower();
@@ -164,5 +164,5 @@ public class SuperPowerDaoDBTest {
         fromDao = superPowerDao.getSuperPowerById(superPower.getSuperPowerId());
         assertNull(fromDao);
     }
-    
+   
 }

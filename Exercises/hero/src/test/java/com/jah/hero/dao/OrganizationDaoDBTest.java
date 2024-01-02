@@ -85,10 +85,10 @@ public class OrganizationDaoDBTest {
     @AfterEach
     public void tearDown() {
     }
-
-    /**
-     * Test of getOrganization method, of class OrganizationDaoDB.
-     */
+//
+//    /**
+//     * Test of getOrganization method, of class OrganizationDaoDB.
+//     */
     @Test
     public void testAddAndGetOrganizationById() {
         
@@ -130,11 +130,11 @@ public class OrganizationDaoDBTest {
         Organization fromDao = organizationDao.getOrganization(organization.getOrganizationId());
         assertEquals(organization,fromDao);
     }
-
-
-    /**
-     * Test of getAllOrganizations method, of class OrganizationDaoDB.
-     */
+//
+//
+//    /**
+//     * Test of getAllOrganizations method, of class OrganizationDaoDB.
+//     */
     @Test
     public void testGetAllOrganizations() {
         SuperPower superPower = new SuperPower();
@@ -193,10 +193,10 @@ public class OrganizationDaoDBTest {
         assertTrue(organizations.contains(organization2));
         
     }
-
-    /**
-     * Test of updateOrganization method, of class OrganizationDaoDB.
-     */
+//
+//    /**
+//     * Test of updateOrganization method, of class OrganizationDaoDB.
+//     */
     @Test
     public void testUpdateOrganization() {
         SuperPower superPower = new SuperPower();
@@ -251,10 +251,10 @@ public class OrganizationDaoDBTest {
         assertEquals(organization1, fromDao);
         
     }
-
-    /**
-     * Test of deleteOrganization method, of class OrganizationDaoDB.
-     */
+//
+//    /**
+//     * Test of deleteOrganization method, of class OrganizationDaoDB.
+//     */
     @Test
     public void testDeleteOrganization() {
         SuperPower superPower = new SuperPower();
@@ -301,10 +301,10 @@ public class OrganizationDaoDBTest {
         assertNull(fromDao);
         
     }
-
-    /**
-     * Test of getAllOrganizationsForHero method, of class OrganizationDaoDB.
-     */
+//
+//    /**
+//     * Test of getAllOrganizationsForHero method, of class OrganizationDaoDB.
+//     */
     @Test
     public void testGetAllOrganizationsForHero() {
         SuperPower superPower = new SuperPower();

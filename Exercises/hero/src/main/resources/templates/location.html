@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <title>Hero Manager</title>
+  </head>
+
+  <body>
+        <!-- Main Body of Page -->
+    <div class="container">
+        
+        <div class="row m-4">
+            <div class="col text-center border border-dark">
+                <h1><a href="/index" class="text-dark">Superhero Sightings Manager</a></h1>
+            </div>
+        </div>
+
+        <div class="row m-4 border border-dark">
+            <div class="col text-center m-3">
+                <a href="superHero" class="btn btn-outline-primary btn-lg">SuperHero</a>
+            </div>
+            <div class="col text-center m-3">
+                <a href="superPower" class="btn btn-outline-primary btn-lg">SuperPower</a>
+            </div>
+            <div class="col text-center m-3">
+                <a href="location" class="btn btn-outline-primary btn-lg">Location</a>
+            </div>
+            <div class="col text-center m-3">
+                <a href="organization" class="btn btn-outline-primary btn-lg">Organization</a>
+            </div>
+            <div class="col text-center m-3">
+                <a href="sighting" class="btn btn-outline-primary btn-lg">Sighting</a>
+            </div>
+        </div>
+        <div class="row m-4 border border-dark">
+            <div class="col-12 m-1 text-center" th:if="${ !errors.isEmpty() || errorLat != null || errorLon != null }">
+                 
+           
+                        <!-- Iterate over bindingResult errors -->
+                        <p class="alert alert-danger" th:each="error : ${errors}" th:text="${error.message}">Error message</p>
+                        <!-- Display additional error message for errorLat,errorLon -->
+                        <p class="alert alert-danger" th:if="${errorLat}" th:text="${errorLat}">Error message</p>
+                        <p class="alert alert-danger" th:if="${errorLon}" th:text="${errorLon}">Error message</p>
+            </div>
+                <div class="col-3 text-center m-3">
+                    <span class="h3">Add Location</span>
+                </div>
+            <div class="col-7 text-center m-3">
+                <form action="addLocation" method="POST" onsubmit="clearFields('location')">
+                        <div class="form-group row">
+                            <label for="name" class="col-3 col-form-label">
+                                Name</label>
+                            <div class="col-9">
+                                <input type="text" placeholder="Enter the location name" name="name" 
+                                       id="name" class="form-control" oninput="saveToSession('name', 'location')"/>
+                            </div>
+                            </div>
+                    <div class="form-group row">
+                        <label for="description" class="col-3 col-form-label">
+                                Description</label>
+                            <div class="col-9">
+                                <input type="text"  placeholder="Enter the location description" name="description" 
+                                       id="description" class="form-control" oninput="saveToSession('description', 'location')"/>
+                            </div>
+                        </div>
+                    <div class="form-group row">
+                        <label class="col-3 col-form-label">
+                                Address Info</label>
+                        <div class="col-9">
+                                <input type="text" placeholder="Enter the location address" name="addressInfo" 
+                                       id="addressInfo" class="form-control" oninput="saveToSession('addressInfo', 'location')"/>
+                            </div>
+                           
+                        </div>
+                    <div class="form-group row">
+                            <label for="latitude" class="col-3 col-form-label">
+                                Latitude</label>
+                          
+                                 <div class="col-9">
+                                <input type="text" placeholder="Enter the location's latitude (format:XX:XXXXXXXX)" name="latitude" 
+                                       id="latitude" class="form-control" oninput="saveToSession('latitude', 'location')"/>
+                                
+                            </div>
+                        </div>
+                        
+                            <div class="form-group row">
+                            <label for="longitude" class="col-3 col-form-label">
+                                Longitude</label>
+                          
+                                 <div class="col-9">
+                                <input type="text" placeholder="Enter the location's longitude (format:XXX:XXXXXXXX)" name="longitude" 
+                                       id="longitude" class="form-control" oninput="saveToSession('longitude', 'location')"/>
+                            </div>
+                               
+                        
+                            <script th:inline="javascript">
+ 
+    function saveToSession(fieldName, template) {
+        var key = template + '_' + fieldName; // Create a unique key for this template
+        var value = document.getElementById(fieldName).value;
+        sessionStorage.setItem(key, value);
+    }
+
+    function clearFields(template) {
+        var nameValue = document.getElementById("name").value;
+        var addressInfoValue = document.getElementById("addressInfo").value;
+        var latitudeValue = document.getElementById("latitude").value;
+        var longitudeValue = document.getElementById("longitude").value;
+
+                            console.log(latitudeValue);
+        if (nameValue !== "" && addressInfoValue !== "" && latitudeValue !== "" && longitudeValue !== "") {
+            var key = template + '_name';
+            sessionStorage.removeItem(key);
+            var key = template + '_addressInfo';
+            sessionStorage.removeItem(key);
+            var key = template + '_description';
+            sessionStorage.removeItem(key);
+            var key = template + '_latitude';
+            sessionStorage.removeItem(key);
+            var key = template + '_longitude';
+            sessionStorage.removeItem(key);
+
+        }
+    }
+    
+    
+    // Retrieve values from session when the page loads
+    document.getElementById("name").value = sessionStorage.getItem("location_name");
+    document.getElementById("addressInfo").value = sessionStorage.getItem("location_addressInfo");
+    document.getElementById("description").value = sessionStorage.getItem("location_description");
+    document.getElementById("latitude").value = sessionStorage.getItem("location_latitude");
+    document.getElementById("longitude").value = sessionStorage.getItem("location_longitude");
+</script>
+</div>
+                    
+                       
+                        <button type="submit" class="btn btn-primary">Add Location</button>
+                    </form>
+                
+            </div>
+
+        </div>
+        <div class="row m-4 border border-dark">
+            <div class="col text-center m-3">
+                <form id="locationForm" action="location" method="POST">
+                 <div class="form-group row">
+                            <label for="hero" class="col-3 col-form-label">
+                               Locations for </label>
+                            <div class="col-6">
+                                <select id="hero" name="heroId" class="form-control" onchange="submitForm()">
+                                    <option value="" disabled selected>Select hero</option>
+                                    <option th:value="${AllHeroes}" th:selected="${AllHeroes eq selectedLocationId}">All Heroes</option>
+<!--                                    <option th:value="${AllLocationsNotSeen}" th:selected="${AllLocationsNotSeen eq selectedLocationId}">All Locations & Not Seen (All Heroes)</option>
+                                    <option th:value="${NotSeen}" th:selected="${NotSeen eq selectedLocationId}">Not Seen</option>-->
+                                    <option th:each="hero : ${heroes}" 
+                                            th:value="${hero.heroId}" 
+                                            th:text="${hero.name}"
+                                            th:selected="${hero.heroId eq selectedLocationId}">
+                                        Location Name</option>
+                                </select>
+                            </div>
+                     <script th:inline="javascript">
+                         function submitForm() {                             
+                             document.getElementById('locationForm').submit();
+                             
+    }
+                         </script>
+                </div>
+                    
+                    </form>
+                <div class="col text-center m-3">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Latitude</th>
+                                <th>Longitude</th>
+                                <th>Details</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="location : ${locationsByHero}">
+                                <td th:text="${location.locationId}">ID</td>
+                                <td th:text="${location.name}">Name</td>
+                                <td th:text="${location.latitude}">Latitude</td>
+                                <td th:text="${location.longitude}">Longitude</td>
+                                <td><a href="#" th:href="@{/locationDetail(id=${location.locationId})}">Details</a></td>
+                                <td><a href="#" th:href="@{/editLocation(id=${location.locationId})}">Edit</a></td>
+                                <td><a href="#" th:href="@{/deleteLocation(id=${location.locationId})}">Delete</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+            </div>
+                
+            </div>
+    </div>
+
+    <!-- End main body -->
+    
+    <!-- Optional JavaScript -->
+
+   
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  
+  </body>
+</html>;

@@ -7,6 +7,7 @@ package com.jah.hero.dao;
 
 import com.jah.hero.dto.Hero;
 import com.jah.hero.dto.Location;
+import com.jah.hero.dto.Sighting;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -61,6 +62,22 @@ public class LocationDaoDB implements LocationDao {
         location.setLocationId(newId);
         return location;
     }
+    
+    private Sighting getSightingForLocation(int id) {
+        final String SELECT_SIGHTING_FOR_LOCATION = "SELECT s.* FROM Sighting s "
+                + "JOIN Location l ON s.locationId = l.locationId WHERE s.locationId = ?";
+        return jdbc.queryForObject(SELECT_SIGHTING_FOR_LOCATION, new SightingDaoDB.SightingMapper(), id);
+    }
+    
+    private void insertSighting(Location location) {
+        final String INSERT_SIGHTING = "INSERT INTO "
+                + "Sighting(sightingId, date, heroId, locationId) VALUES(?,?,?,?)";
+        Sighting sighting = getSightingForLocation(location.getLocationId());
+        
+            jdbc.update(INSERT_SIGHTING,
+                    sighting.getSightingId(),
+                    sighting.getDate(), sighting.getHero().getHeroId(), sighting.getLocation().getLocationId()); 
+    }
 
     @Override
     public void updateLocation(Location location) {
@@ -73,6 +90,10 @@ public class LocationDaoDB implements LocationDao {
                 location.getLatitude(),
                 location.getLongitude(),
                 location.getLocationId());
+        
+//        final String DELETE_SIGHTING= "DELETE FROM Sighting WHERE locationId = ?";
+//        jdbc.update(DELETE_SIGHTING, location.getLocationId());
+//        insertSighting(location);
     }
 
     @Override

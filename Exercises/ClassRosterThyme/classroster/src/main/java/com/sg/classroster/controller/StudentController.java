@@ -69,8 +69,6 @@ public class StudentController {
         } else {
             List<Student> students = studentDao.getAllStudents();
             model.addAttribute("students", students);
-//            model.addAttribute("firstName", firstName);
-//            model.addAttribute("lastName", lastName);
             model.addAttribute("errors", violations);
             return "students";
         }

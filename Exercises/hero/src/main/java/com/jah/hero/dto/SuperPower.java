@@ -6,14 +6,19 @@
 package com.jah.hero.dto;
 
 import java.util.Objects;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 /**
  *
  * @author drjal
  */
 public class SuperPower {
-    
+
     private int superPowerId;
+
+    @NotBlank(message = "SuperPower name must not be empty.")
+    @Size(max = 50, message = "SuperPower name must be less than 50 characters.")
     private String name;
 
     public int getSuperPowerId() {
@@ -60,8 +65,5 @@ public class SuperPower {
         }
         return true;
     }
-    
-    
-    
-    
+
 }

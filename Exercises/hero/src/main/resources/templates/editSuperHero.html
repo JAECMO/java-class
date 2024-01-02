@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+        <title>Hero Manager</title>
+    </head>
+    <body>
+        <!-- Main Body of Page -->
+        <div class="container">
+            <div class="row m-4">
+            <div class="col text-center border border-dark">
+                <h1><a href="/index" class="text-dark">Superhero Sightings Manager</a></h1>
+            </div>
+        </div>
+
+        <div class="row m-4 border border-dark">
+            <div class="col text-center m-3">
+                <a href="superHero" class="btn btn-outline-primary btn-lg">SuperHero</a>
+            </div>
+            <div class="col text-center m-3">
+                <a href="superPower" class="btn btn-outline-primary btn-lg">SuperPower</a>
+            </div>
+            <div class="col text-center m-3">
+                <a href="location" class="btn btn-outline-primary btn-lg">Location</a>
+            </div>
+            <div class="col text-center m-3">
+                <a href="organization" class="btn btn-outline-primary btn-lg">Organization</a>
+            </div>
+            <div class="col text-center m-3">
+                <a href="sighting" class="btn btn-outline-primary btn-lg">Sighting</a>
+            </div>
+        </div>
+            <div class="row m-4 border border-dark">
+                <div class="col-12 m-1 text-center" 
+                     th:if="${!errors.isEmpty()}">
+                    <p class="alert alert-danger" th:each="error : ${errors}" 
+                       th:text="${error.message}">Error message</p>
+                </div>
+                <div class="col-3 text-center m-3">
+                    <span class="h3">Edit SuperHero</span>
+                </div>
+                <div class="col-7 text-center m-3">
+                    <form action="editSuperHero" method="POST">
+                        <div class="form-group row">
+                            <label for="name" class="col-3 col-form-label">
+                                Name</label>
+                            <div class="col-9">
+                                <input type="text" name="name" id="name" class="form-control" 
+                                       th:value="${hero.name}" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="description" class="col-3 col-form-label">
+                                Description</label>
+                            <div class="col-9">
+                                <input type="text" name="description" id="description" class="form-control"
+                                       th:value="${hero.description}"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-3 col-form-label">
+                                is Hero?</label>
+                        <div class="col-9">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="isHero" id="inlineRadio1" value="Yes" th:checked="${hero.isHero}">
+                                <label class="form-check-label" for="inlineRadio1">Yes</label>
+                                </div>
+                        <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="isHero" id="inlineRadio2" value="No" th:checked="${!hero.isHero}">
+                                     <label class="form-check-label" for="inlineRadio2">No</label>
+                                    </div>
+
+                            </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">
+                                SuperPower</label>
+                                <div class="col-9">
+                                <select id="superPower" name="superPowerId" class="form-control">
+                                    <option value="" disabled selected>Select a super power</option> 
+                                    <option th:each="superPower : ${superPowers}" 
+                                            th:value="${superPower.superPowerId}" 
+                                            th:text="${superPower.name}"
+                                            th:selected="${superPower.superPowerId eq selectedSuperPowerId}">>
+                                        SuperPower Name</option>
+                                </select>
+                            </div>
+                                
+                            </div>
+                            
+                        
+                        <input type="hidden" name="id" th:value="${hero.heroId}"/>
+                        <button type="submit" class="btn btn-primary">Update SuperHero</button>
+                    </form>
+                </div>
+            </div>
+        </div>  
+
+        <!-- End main body -->
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    </body>
+</html>;

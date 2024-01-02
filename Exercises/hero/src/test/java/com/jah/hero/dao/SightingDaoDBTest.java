@@ -85,10 +85,10 @@ public class SightingDaoDBTest {
     @AfterEach
     public void tearDown() {
     }
-
-    /**
-     * Test of getSighting method, of class SightingDaoDB.
-     */
+//
+//    /**
+//     * Test of getSighting method, of class SightingDaoDB.
+//     */
     @Test
     public void testAddAndGetSightingById() {
         SuperPower superPower = new SuperPower();
@@ -122,10 +122,10 @@ public class SightingDaoDBTest {
         assertEquals(sighting,fromDao);
         
     }
-    
-    /**
-     * Test of getAllSightings method, of class SightingDaoDB.
-     */
+//    
+//    /**
+//     * Test of getAllSightings method, of class SightingDaoDB.
+//     */
     @Test
     public void testGetAllSightings() {
          SuperPower superPower = new SuperPower();
@@ -199,10 +199,10 @@ public class SightingDaoDBTest {
         assertTrue(sightings.contains(sighting3));
         assertTrue(sightings.contains(sighting));
     }
-
-    /**
-     * Test of updateSighting method, of class SightingDaoDB.
-     */
+//
+//    /**
+//     * Test of updateSighting method, of class SightingDaoDB.
+//     */
     @Test
     public void testUpdateSighting() {
         SuperPower superPower = new SuperPower();
@@ -256,10 +256,10 @@ public class SightingDaoDBTest {
         assertEquals(sighting, fromDao);
      
     }
-
-    /**
-     * Test of deleteSighting method, of class SightingDaoDB.
-     */
+//
+//    /**
+//     * Test of deleteSighting method, of class SightingDaoDB.
+//     */
     @Test
     public void testDeleteSighting() {
         SuperPower superPower = new SuperPower();
@@ -297,10 +297,10 @@ public class SightingDaoDBTest {
         fromDao = sightingDao.getSighting(sighting.getSightingId());
         assertNull(fromDao);
     }
-
-    /**
-     * Test of getAllSightingByDate method, of class SightingDaoDB.
-     */
+//
+//    /**
+//     * Test of getAllSightingByDate method, of class SightingDaoDB.
+//     */
     @Test
     public void testGetAllSightingByDate() {
         SuperPower superPower = new SuperPower();
@@ -363,5 +363,5 @@ public class SightingDaoDBTest {
         
         
     }
-    
+  
 }

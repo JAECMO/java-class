@@ -7,18 +7,29 @@ package com.jah.hero.dto;
 
 import java.util.List;
 import java.util.Objects;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 /**
  *
  * @author drjal
  */
 public class Organization {
-    
+
     private int organizationId;
+    @NotBlank(message = "Name must not be empty.")
+    @Size(max = 50, message = "Name must be at most 50 characters.")
     private String name;
+    @Size(max = 300, message = "Description must be at most 300 characters.")
     private String description;
+    @NotBlank(message = "Address must not be empty.")
+    @Size(max = 100, message = "Address must be at most 100 characters.")
     private String addressInfo;
+    @NotBlank(message = "Contact must not be empty.")
+    @Size(max = 100, message = "Contact must be at most 150 characters.")
     private String contactInfo;
+    @NotEmpty(message = "Add at least one Hero/Vilain to the organization")
     private List<Hero> members;
     private boolean isHero;
 
@@ -127,6 +138,4 @@ public class Organization {
         return true;
     }
 
-    
-    
 }

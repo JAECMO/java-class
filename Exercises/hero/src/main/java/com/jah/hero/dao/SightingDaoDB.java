@@ -8,9 +8,7 @@ package com.jah.hero.dao;
 
 import com.jah.hero.dto.Hero;
 import com.jah.hero.dto.Location;
-import com.jah.hero.dto.Organization;
 import com.jah.hero.dto.Sighting;
-import com.jah.hero.dto.SuperPower;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;

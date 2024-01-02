@@ -6,17 +6,24 @@
 package com.jah.hero.dto;
 
 import java.util.Objects;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
  * @author drjal
  */
 public class Hero {
-    
+
     private int heroId;
+    @NotBlank(message = "Name must not be empty.")
+    @Size(max = 50, message = "Name must be less than 50 characters.")
     private String name;
+    @Size(max = 300, message = "Description must be less than 300 characters.")
     private String description;
     private boolean isHero;
+    @NotNull(message = "Add a SuperPower to the super hero/vilain")
     private SuperPower superPower;
 
     public int getHeroId() {
@@ -99,6 +106,5 @@ public class Hero {
         }
         return true;
     }
-    
-    
+
 }

@@ -5,7 +5,6 @@
  */
 package com.jah.hero.dao;
 
-import com.jah.hero.dto.Location;
 import com.jah.hero.dto.SuperPower;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,13 +28,14 @@ public class SuperPowerDaoDB implements SuperPowerDao {
 
     @Override
     public SuperPower getSuperPowerById(int id) {
-  try {
+        try {
             final String GET_SUPERPOWER_BY_ID = "SELECT * FROM SuperPower WHERE superPowerId = ?";
             SuperPower superPower = jdbc.queryForObject(GET_SUPERPOWER_BY_ID, new SuperPowerDaoDB.SuperPowerMapper(), id);
             return superPower;
         } catch (DataAccessException ex) {
             return null;
-        }    }
+        }
+    }
 
     @Override
     public List<SuperPower> getAllSuperPower() {
@@ -63,12 +63,13 @@ public class SuperPowerDaoDB implements SuperPowerDao {
         jdbc.update(UPDATE_SUPER_POWER,
                 superPower.getName(),
                 superPower.getSuperPowerId());
+
     }
 
     @Override
     @Transactional
     public void deletesuperPower(int id) {
-        final String DELETE_HERO = "DELETE FROM Hero WHERE superPowerId = ?";
+        final String DELETE_HERO = "DELETE FROM HeroSuperPower WHERE superPowerId = ?";
         jdbc.update(DELETE_HERO, id);
 
         final String DELETE_SUPER_POWER = "DELETE FROM SuperPower WHERE superPowerId = ?";

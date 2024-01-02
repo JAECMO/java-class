@@ -5,19 +5,25 @@
  */
 package com.jah.hero.dto;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.Objects;
+import javax.validation.constraints.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *
  * @author drjal
  */
 public class Sighting {
-    
+
     private int sightingId;
-    private Date date;
+    @NotNull(message = "Select a Hero")
     private Hero hero;
+    @NotNull(message = "Select a Location")
     private Location location;
+    @NotNull(message = "Enter the date of the sighting")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date date;
 
     public int getSightingId() {
         return sightingId;
@@ -87,7 +93,5 @@ public class Sighting {
         }
         return true;
     }
-    
-    
-    
+
 }
