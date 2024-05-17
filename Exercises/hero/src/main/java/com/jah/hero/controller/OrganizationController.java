@@ -8,9 +8,7 @@ package com.jah.hero.controller;
 import com.jah.hero.dao.HeroDao;
 import com.jah.hero.dao.OrganizationDao;
 import com.jah.hero.dto.Hero;
-import com.jah.hero.dto.Location;
 import com.jah.hero.dto.Organization;
-import com.jah.hero.dto.SuperPower;
 import com.jah.hero.service.OrganizationService;
 import java.util.HashSet;
 import java.util.List;
@@ -34,10 +32,10 @@ public class OrganizationController {
 
     @Autowired
     HeroDao heroDao;
-    
+
     @Autowired
     OrganizationDao organizationDao;
-    
+
     @Autowired
     OrganizationService organizationService;
 
@@ -77,15 +75,14 @@ public class OrganizationController {
 
     @PostMapping("addOrganization")
     public String addOrganization(Organization organization, Model model, HttpServletRequest request) {
-       List<Organization> organizationByHero = organizationService.menuSelectionAndOrganizationList(model, request);
+        List<Organization> organizationByHero = organizationService.menuSelectionAndOrganizationList(model, request);
 
+        organization = organizationService.organizationCreation(organization, request);
 
-       organization = organizationService.organizationCreation(organization, request);
-        
         Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
         violations = validate.validate(organization);
-        
-          if (violations.isEmpty()) {
+
+        if (violations.isEmpty()) {
             organizationDao.addOrganization(organization);
             return "redirect:/organization";
         } else {
@@ -97,27 +94,27 @@ public class OrganizationController {
             model.addAttribute("errors", violations);
             return "organization";
         }
-        
+
     }
-    
+
     @GetMapping("organizationDetail")
     public String organizationDetail(Integer id, Model model) {
         Organization organization = organizationDao.getOrganization(id);
         model.addAttribute("organization", organization);
         return "organizationDetail";
     }
-    
+
     @GetMapping("deleteOrganization")
     public String deleteOrganization(Integer id) {
         organizationDao.deleteOrganization(id);
         return "redirect:/organization";
     }
-    
+
     @GetMapping("editOrganization")
     public String editOrganization(Integer id, Model model) {
         Organization organization = organizationDao.getOrganization(id);
         List<Hero> heroes = heroDao.getAllHeroes();
-        
+
         model.addAttribute("organization", organization);
         model.addAttribute("savedHeroes", heroes);
 
@@ -128,8 +125,8 @@ public class OrganizationController {
 
         return "editOrganization";
     }
-   
-     @PostMapping("editOrganization")
+
+    @PostMapping("editOrganization")
     public String performEditOrganization(Model model, HttpServletRequest request) {
         int id = Integer.parseInt(request.getParameter("id"));
         Organization organization = organizationDao.getOrganization(id);
@@ -143,12 +140,12 @@ public class OrganizationController {
             organizationDao.updateOrganization(organization);
             return "redirect:/organization";
         } else {
-           
+
             model.addAttribute("organization", organization);
             model.addAttribute("errors", violations);
             return "editOrganization";
 
         }
     }
-    
+
 }

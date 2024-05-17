@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+        <title>Hero Manager</title>
+        <style>
+                                        body {
+                background-color: #f8f9fa;  
+            }
+                                 .col-custom-width {
+                width: 1052px; /* Set the custom width */
+
+            }
+            
+                        /* Add shadow to buttons */
+            .btn {
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Main Body of Page -->
+        <div class="col-custom-width container">
+            <div class="row justify-content-center">
+            <div th:replace="fragments/topnav :: navbar">
+            </div>
+<div class="col-12 col-custom-width text-center" style="margin-top: 40px;">  <h3>Edit Posts</h3></div>
+
+
+        <div class="col-md-12">
+            <form th:action="@{/filteredPosts}" method="post" onsubmit="return validateForm()">
+    <div class="form-row">
+        <div class="form-group col-md-3">
+            <label for="filterAttribute">Filter by Attribute:</label>
+            <select class="form-control" id="filterAttribute" name="filterAttribute" onchange="showOptions()">
+                <option value="" disabled selected>Select your option</option>
+                <option value="id" th:selected="${filterAttribute == 'id'}">ID</option>
+                <option value="author" th:selected="${filterAttribute == 'author'}">Author</option>
+                <option value="creationDate" th:selected="${filterAttribute == 'creationDate'}">Creation Date</option>
+                <option value="updateDate" th:selected="${filterAttribute == 'updateDate'}">Last Update Date</option>
+                <option value="displayDate" th:selected="${filterAttribute == 'displayDate'}">Display Date</option>
+                <option value="expiryDate" th:selected="${filterAttribute == 'expiryDate'}">Expiry Date</option>
+                <option value="active" th:selected="${filterAttribute == 'active'}">Active</option>
+                <option value="approved" th:selected="${filterAttribute == 'approved'}">Approved</option>
+            </select>
+        </div>
+        <div class="form-group col-md-3" id="orderOptions" style="display: none;" >
+            <label for="filterOrder">Filter Order:</label>
+            <select class="form-control" id="filterOrder" name="filterOrder">
+                <option value="">Select the order</option>
+                <option value="asc" th:selected="${filterOrder == 'asc'}">Ascending</option>
+                <option value="desc" th:selected="${filterOrder == 'desc'}">Descending</option>
+            </select>
+        </div>
+        <div class="form-group col-md-3" id="authorOptions" style="display: none;">
+            <label for="filterAuthor">Filter by Author:</label>
+            <select class="form-control" id="filterAuthor" name="filterAuthor">
+                <option value="" selected>Select the author</option>
+                <!-- Loop over unique author names -->
+                <option th:each="author : ${authorList}" 
+                        th:text="${author.userName}" 
+                        th:value="${author.userId}" 
+                        th:selected="${author.userName eq selectedAuthorName}"> Author Name</option>
+                
+            </select>
+        </div>
+        <div class="form-group col-md-3" id="yesOrNoOptions" style="display: none;">
+            <label for="filterYesOrNo">Filter by Author:</label>
+            <select class="form-control" id="filterYesOrNo" name="filterYesOrNo">
+                <option value="">Select your choice</option>
+                <option value="yes" th:selected="${filterYesOrNo == 'yes'}">Yes</option>
+                <option value="no" th:selected="${filterYesOrNo == 'no'}">No</option>
+            </select>
+        </div>
+    </div>
+<!--    <button type="button" class="btn btn-secondary" onclick="resetFilters()">Reset Filters</button>-->
+    <button type="submit" class="btn btn-primary">Apply Filters</button>
+</form>
+        </div>
+    
+
+    <!-- Table content for approved posts -->
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+   <div class="col-12 col-custom-width text-center" style="margin-top: 40px;">  <h3>Post List</h3></div>
+            <table class="table table-borderless" style="margin-top: 40px;">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Creation Date</th>
+                        <th>Last Update Date</th>
+                        <th>Display Date</th>
+                        <th>Expiry Date</th>
+                        <th>Author</th>
+                        <th>Active</th>
+                        <th>Approved</th>
+                        <th>Update</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Use th:if to filter rows based on user input -->
+                    <tr th:each="userPost : ${userPostList}">
+                        <td th:text="${userPost.post.postId}"></td>
+                        <td th:text="${userPost.post.title}"></td>
+                        <td th:text="${userPost.post.creationDate}"></td>
+                        <td th:text="${userPost.post.updateDate}"></td>
+                        <td th:text="${userPost.post.displayDate}"></td>
+                        <td th:text="${userPost.post.expiryDate}"></td>
+                        <td th:text="${userPost.user.userName}"></td>
+                        <td th:text="${userPost.post.active} ? 'Yes' : 'No'"></td>
+                        <td th:text="${userPost.post.approved} ? 'Yes' : 'No'"></td>
+                        <td><a href="#" th:href="@{/updatePost(id=${userPost.post.postId})}">Update</a></td>
+                        <td><a href="#" th:href="@{/removePost(id=${userPost.post.postId})}">Delete</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+
+</div> 
+        </div>  
+
+
+        <!-- End main body -->
+
+        <!-- Optional JavaScript -->
+        <script type="text/javascript">
+//            function resetOptions() {
+//                // Reset values
+//    
+//    document.getElementById("filterYesOrNo").value = ""; 
+////             // Reset selected options
+////    var selectAscOrDesc = document.getElementById("filterOrder");
+////    selectAscOrDesc.querySelector("option[selected]").removeAttribute("selected");
+////    selectAscOrDesc.querySelector("option[value='']").setAttribute("selected", ""); 
+//                
+//            }
+            
+//             function resetOptions2() {
+//                // Reset values
+//    document.getElementById("filterOrder").value = "";
+//
+////             // Reset selected options
+////    var selectAscOrDesc = document.getElementById("filterOrder");
+////    selectAscOrDesc.querySelector("option[selected]").removeAttribute("selected");
+////    selectAscOrDesc.querySelector("option[value='']").setAttribute("selected", ""); 
+//                
+//            }
+     function showOptions() {        
+        var attribute = document.getElementById("filterAttribute").value;
+        var orderOptions = document.getElementById("orderOptions");
+        var authorOptions = document.getElementById("authorOptions");
+        var yesOrNoOptions = document.getElementById("yesOrNoOptions");
+        
+        // Hide all additional option
+        orderOptions.style.display = "none";
+        authorOptions.style.display = "none";
+        yesOrNoOptions.style.display = "none";
+        // Show options based on selected attribute
+        if (attribute === "id" || attribute === "creationDate" || attribute === "updateDate" || attribute === "displayDate" || attribute === "expiryDate") {
+            orderOptions.style.display = "block";
+        } else if (attribute === "author") {
+            document.getElementById("filterOrder").value = "";
+            document.getElementById("filterYesOrNo").value = "";
+            authorOptions.style.display = "block";
+        }else if(attribute === "active" || attribute === "approved"){
+            document.getElementById("filterOrder").value = "";
+            yesOrNoOptions.style.display = "block";
+        }
+        // Add conditions for other attributes here
+    }
+
+
+    
+    
+    function validateForm() {
+        var filterOrder = document.getElementById("filterOrder").value;
+         var filterYesOrNo = document.getElementById("filterYesOrNo").value;
+         var filterAuthor = document.getElementById("filterAuthor").value;
+         var attribute = document.getElementById("filterAttribute").value;
+         
+        if (filterOrder === "" && filterYesOrNo === "" && filterAuthor === "") {
+            // If filterCreationDate is empty, prevent form submissionfilterYesOrNo
+            return false;
+        }else if ((attribute === "id" || attribute === "creationDate" || attribute === "updateDate" || attribute === "displayDate" || attribute === "expiryDate") && filterOrder === "" ){
+        // Otherwise, allow form submission
+        return false;
+    }else if((attribute === "active" || attribute === "approved") && filterYesOrNo === ""){
+        
+         return false;
+    }else if((attribute === "author") && filterAuthor === ""){
+        
+       return false; 
+    }else{
+         return true; 
+    }
+    }
+    
+     // Call showOptions() when the page loads or reloads
+    window.onload = function() {
+        showOptions();
+    }
+
+</script>
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    </body>
+</html>

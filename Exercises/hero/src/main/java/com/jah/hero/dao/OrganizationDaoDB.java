@@ -8,7 +8,6 @@ package com.jah.hero.dao;
 import com.jah.hero.dao.HeroDaoDB.HeroMapper;
 import com.jah.hero.dto.Hero;
 import com.jah.hero.dto.Organization;
-import com.jah.hero.dto.SuperPower;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -23,13 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author drjal
  */
-
 @Repository
 public class OrganizationDaoDB implements OrganizationDao {
-    
+
     @Autowired
     JdbcTemplate jdbc;
-    
+
     @Autowired
     HeroDaoDB heroDaoDB;
 
@@ -39,9 +37,9 @@ public class OrganizationDaoDB implements OrganizationDao {
             final String SELECT_ORGANIZATION_BY_ID = "SELECT * FROM Organization WHERE organizationId = ?";
             Organization organization = jdbc.queryForObject(SELECT_ORGANIZATION_BY_ID, new OrganizationDaoDB.OrganizationMapper(), id);
             List<Hero> heroes = getHeroesForOrganization(id);
-           heroDaoDB.associateSuperPower(heroes); 
+            heroDaoDB.associateSuperPower(heroes);
             organization.setMembers(heroes);
-            
+
             return organization;
         } catch (DataAccessException ex) {
             return null;
@@ -85,11 +83,11 @@ public class OrganizationDaoDB implements OrganizationDao {
     @Override
     public List<Organization> getAllOrganizations() {
         final String GET_ALL_ORGANIZATIONS = "SELECT * FROM Organization";
-        
+
         List<Organization> organizations = jdbc.query(GET_ALL_ORGANIZATIONS, new OrganizationDaoDB.OrganizationMapper());
-        
+
         associateSuperPowerToHeroes(organizations);
-        
+
         return organizations;
     }
 
@@ -130,10 +128,9 @@ public class OrganizationDaoDB implements OrganizationDao {
         associateSuperPowerToHeroes(organizations);
         return organizations;
     }
-    
-    
-     private void associateSuperPowerToHeroes(List<Organization> organizations){
-        for(Organization organization : organizations){
+
+    private void associateSuperPowerToHeroes(List<Organization> organizations) {
+        for (Organization organization : organizations) {
             List<Hero> heroes = getHeroesForOrganization(organization.getOrganizationId());
             heroDaoDB.associateSuperPower(heroes);
             organization.setMembers(heroes);

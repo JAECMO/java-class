@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 public class LocationDaoDB implements LocationDao {
-    
+
     @Autowired
     JdbcTemplate jdbc;
 
@@ -62,21 +62,21 @@ public class LocationDaoDB implements LocationDao {
         location.setLocationId(newId);
         return location;
     }
-    
+
     private Sighting getSightingForLocation(int id) {
         final String SELECT_SIGHTING_FOR_LOCATION = "SELECT s.* FROM Sighting s "
                 + "JOIN Location l ON s.locationId = l.locationId WHERE s.locationId = ?";
         return jdbc.queryForObject(SELECT_SIGHTING_FOR_LOCATION, new SightingDaoDB.SightingMapper(), id);
     }
-    
+
     private void insertSighting(Location location) {
         final String INSERT_SIGHTING = "INSERT INTO "
                 + "Sighting(sightingId, date, heroId, locationId) VALUES(?,?,?,?)";
         Sighting sighting = getSightingForLocation(location.getLocationId());
-        
-            jdbc.update(INSERT_SIGHTING,
-                    sighting.getSightingId(),
-                    sighting.getDate(), sighting.getHero().getHeroId(), sighting.getLocation().getLocationId()); 
+
+        jdbc.update(INSERT_SIGHTING,
+                sighting.getSightingId(),
+                sighting.getDate(), sighting.getHero().getHeroId(), sighting.getLocation().getLocationId());
     }
 
     @Override
@@ -90,10 +90,7 @@ public class LocationDaoDB implements LocationDao {
                 location.getLatitude(),
                 location.getLongitude(),
                 location.getLocationId());
-        
-//        final String DELETE_SIGHTING= "DELETE FROM Sighting WHERE locationId = ?";
-//        jdbc.update(DELETE_SIGHTING, location.getLocationId());
-//        insertSighting(location);
+
     }
 
     @Override
@@ -102,7 +99,7 @@ public class LocationDaoDB implements LocationDao {
 
         final String DELETE_SIGHTING = "DELETE FROM Sighting WHERE locationId = ?";
         jdbc.update(DELETE_SIGHTING, id);
-        
+
         final String DELETE_LOCATION = "DELETE FROM Location WHERE locationId = ?";
         jdbc.update(DELETE_LOCATION, id);
     }
@@ -112,10 +109,10 @@ public class LocationDaoDB implements LocationDao {
         int heroId = hero.getHeroId();
         final String GET_LOCATIONS_FOR_HERO = "SELECT l.* FROM Location l "
                 + "JOIN Sighting s ON s.locationId = l.locationId WHERE s.heroId = ?";
-        return jdbc.query(GET_LOCATIONS_FOR_HERO, new LocationDaoDB.LocationMapper (), heroId);
+        return jdbc.query(GET_LOCATIONS_FOR_HERO, new LocationDaoDB.LocationMapper(), heroId);
     }
-    
-        public static final class LocationMapper implements RowMapper<Location> {
+
+    public static final class LocationMapper implements RowMapper<Location> {
 
         @Override
         public Location mapRow(ResultSet rs, int index) throws SQLException {
@@ -129,7 +126,5 @@ public class LocationDaoDB implements LocationDao {
             return location;
         }
     }
-    
-    
-    
+
 }

@@ -22,7 +22,8 @@ import org.springframework.ui.Model;
  */
 @Service
 public class HeroService {
-     @Autowired
+
+    @Autowired
     HeroDao heroDao;
 
     @Autowired
@@ -30,8 +31,8 @@ public class HeroService {
 
     @Autowired
     LocationDao locationDao;
-    
-    public List<Hero> menuSelectionAndHeroList(Model model, HttpServletRequest request){
+
+    public List<Hero> menuSelectionAndHeroList(Model model, HttpServletRequest request) {
         String locationId = request.getParameter("locationId");
         String allLocations = "All Locations";
         String allLocationsNotSeen = "All Locations & Not Seen (All Heroes)";
@@ -64,10 +65,10 @@ public class HeroService {
             heroesByLocation = heroDao.getAllHeroes();
 
         }
-        
+
         return heroesByLocation;
     }
-    
+
     public Hero heroCreation(Hero hero, HttpServletRequest request) {
 
         String name = request.getParameter("name");
@@ -88,9 +89,9 @@ public class HeroService {
 
         return hero;
     }
-    
-    public Integer getCurrentId (List<Hero> heroes){
-    Integer maxId = null;
+
+    public Integer getCurrentId(List<Hero> heroes) {
+        Integer maxId = null;
 
         for (Hero hero : heroes) {
             Integer heroId = hero.getHeroId(); // Assuming there's a method to get the ID, replace with the actual method
@@ -101,10 +102,5 @@ public class HeroService {
 
         return maxId;
     }
-    
-    
-    
-    
-    
-    
+
 }

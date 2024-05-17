@@ -18,13 +18,15 @@ import org.springframework.web.bind.annotation.GetMapping;
  * @author drjal
  */
 @Controller
-public class MapController {
+public class MapController { //shows errors in tests only with the MapController, but app still run perfectly
+
+    @Autowired
+    SightingDao sightingDao;
 
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;
-     
-    @Autowired
-    SightingDao sightingDao;
+
+    
 
     @GetMapping("/map")
     public String showMap(Integer id, Model model) {

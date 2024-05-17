@@ -26,13 +26,13 @@ import org.springframework.web.bind.annotation.PostMapping;
  */
 @Controller
 public class SuperPowerController {
-    
+
     @Autowired
     SuperPowerDao superPowerDao;
-    
+
     Set<ConstraintViolation<SuperPower>> violations = new HashSet<>();
-    
-     @GetMapping("superPower")
+
+    @GetMapping("superPower")
     public String displaySuperPower(Model model) {
         List<SuperPower> superPowers = superPowerDao.getAllSuperPower();
         model.addAttribute("superPowers", superPowers);
@@ -43,15 +43,15 @@ public class SuperPowerController {
         model.addAttribute("errors", violations);
         return "superPower";
     }
-    
+
     @PostMapping("addSuperPower")
-    public String addSuperPower(SuperPower superPower,Model model,HttpServletRequest request) {
-        
+    public String addSuperPower(SuperPower superPower, Model model, HttpServletRequest request) {
+
         String name = request.getParameter("name");
-     
+
         Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
         violations = validate.validate(superPower);
-      
+
         if (violations.isEmpty()) {
             superPower.setName(name);
             model.addAttribute("hasErrors", false);
@@ -64,33 +64,32 @@ public class SuperPowerController {
             model.addAttribute("errors", violations);
             return "superPower";
         }
-        
+
     }
-    
+
     @GetMapping("deleteSuperPower")
     public String deleteSuperPower(Integer id) {
         superPowerDao.deletesuperPower(id);
         return "redirect:/superPower";
     }
-    
-    
+
     @GetMapping("editSuperPower")
     public String editSuperPower(Integer id, Model model) {
-       
+
         SuperPower superPower = superPowerDao.getSuperPowerById(id);
-        
+
         model.addAttribute("superPower", superPower);
         model.addAttribute("name", superPower.getName());
-        
-        if(!violations.isEmpty()){
-             violations.clear();
+
+        if (!violations.isEmpty()) {
+            violations.clear();
         }
         model.addAttribute("errors", violations);
-        
+
         return "editSuperPower";
     }
-    
-       @PostMapping("editSuperPower")
+
+    @PostMapping("editSuperPower")
     public String performEditStudent(Model model, HttpServletRequest request) {
         int id = Integer.parseInt(request.getParameter("id"));
         SuperPower superPower = superPowerDao.getSuperPowerById(id);
@@ -106,12 +105,12 @@ public class SuperPowerController {
             superPowerDao.updateSuperPower(superPower);
             return "redirect:/superPower";
         } else {
-            model.addAttribute("superPower",superPower);
+            model.addAttribute("superPower", superPower);
             model.addAttribute("name", name);
             model.addAttribute("errors", violations);
             return "editSuperPower";
 
         }
     }
-    
+
 }

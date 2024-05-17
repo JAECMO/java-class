@@ -51,7 +51,6 @@ public class SightingController {
 
     Set<ConstraintViolation<Sighting>> violations = new HashSet<>();
 
-//    String errorDate = null;
     @GetMapping("sighting")
     public String displaySighting(Model model, HttpServletRequest request) {
         List<Hero> heroes = heroDao.getAllHeroes();
@@ -117,25 +116,13 @@ public class SightingController {
 
     }
 
-//    @GetMapping("sightingDetail")
-//    public String sightingDetail(Integer id, Model model) {
-//        Sighting sighting = sightingDao.getSighting(id);
-//        model.addAttribute("sighting", sighting);
-//        
-//        
-//        
-//        return "sightingDetail";
-//    }
-    
     @GetMapping("sightingDetail")
     public String sightingDetail(Integer id, Model model) {
         Sighting sighting = sightingDao.getSighting(id);
 
-       
-
         String image = sighting.getHero().getHeroId() + ".jpg";
         String imageDefault = "default.png";
-        
+
         // Check if the image file exists
         String absolutePath = "src\\main\\resources\\static\\images" + "\\" + image;
         File imageFile = new File(absolutePath);

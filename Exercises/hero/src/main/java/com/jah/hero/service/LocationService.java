@@ -22,12 +22,13 @@ import org.springframework.ui.Model;
  */
 @Service
 public class LocationService {
+
     @Autowired
     LocationDao locationDao;
 
     @Autowired
     HeroDao heroDao;
-    
+
     public List<Location> menuSelectionAndLocationList(Model model, HttpServletRequest request) {
         String heroId = request.getParameter("heroId");
         String allHeroes = "All Heroes";
@@ -51,8 +52,8 @@ public class LocationService {
         }
         return locationsByHero;
     }
-    
-    public LocationStrings locationAndErrorsCreation(Location location, HttpServletRequest request){
+
+    public LocationStrings locationAndErrorsCreation(Location location, HttpServletRequest request) {
         String name = request.getParameter("name");
         String addressInfo = request.getParameter("addressInfo");
         String description = request.getParameter("description");
@@ -63,7 +64,7 @@ public class LocationService {
         double latDouble = 0;
         double lonDouble = 0;
 
-         if (latitude.isEmpty()) {
+        if (latitude.isEmpty()) {
             errorLat = "Latitude cannot be empty";
         } else {
             try {
@@ -72,8 +73,8 @@ public class LocationService {
                 errorLat = "Invalid Latitude format";
             }
         }
-         
-         if (longitude.isEmpty()) {
+
+        if (longitude.isEmpty()) {
             errorLon = "Longitude cannot be empty";
         } else {
             try {
@@ -82,7 +83,6 @@ public class LocationService {
                 errorLon = "Invalid Longitude format";
             }
         }
-         
 
         location.setName(name);
         location.setAddressInfo(addressInfo);
@@ -90,14 +90,10 @@ public class LocationService {
         location.setLatitude(latDouble);
         location.setLongitude(lonDouble);
 
-        
         LocationStrings locationStrings = new LocationStrings(location, errorLat, errorLon);
         return locationStrings;
-    
+
     }
-    
-    
-    
 
     public class LocationStrings {
 

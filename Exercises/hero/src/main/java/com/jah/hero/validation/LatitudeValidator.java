@@ -15,6 +15,7 @@ import javax.validation.ConstraintValidatorContext;
  * @author drjal
  */
 public class LatitudeValidator implements ConstraintValidator<Latitude, Double> {
+
     private static final String LATITUDE_PATTERN = "^[-+]?([1-8]?\\d(\\.\\d{1,8})?|90(\\.0{1,8})?)$";
 
     @Override
@@ -22,7 +23,7 @@ public class LatitudeValidator implements ConstraintValidator<Latitude, Double> 
     }
 
     @Override
-        public boolean isValid(Double latitude, ConstraintValidatorContext context)  {
+    public boolean isValid(Double latitude, ConstraintValidatorContext context) {
         if (latitude == null) {
             return false; // Let @NotBlank or @NotNull handle empty values
         }
@@ -32,14 +33,12 @@ public class LatitudeValidator implements ConstraintValidator<Latitude, Double> 
             context.buildConstraintViolationWithTemplate("Latitude must be between -90 and 90").addConstraintViolation();
             return false;
         }
-            String latitudeString = String.valueOf(latitude);
+        String latitudeString = String.valueOf(latitude);
         if (!isValidFormat(latitudeString)) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("Invalid latitude format").addConstraintViolation();
             return false;
         }
-
-
 
         return true;
     }
@@ -49,5 +48,5 @@ public class LatitudeValidator implements ConstraintValidator<Latitude, Double> 
         Matcher matcher = pattern.matcher(latitude);
         return matcher.matches();
     }
-    
+
 }

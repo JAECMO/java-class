@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <title>Hero Manager</title>
+        <style>
+             body {
+             background-color: #f8f9fa;  
+        }
+
+      /* Define your card style */
+        .card {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow here */
+        }
+
+/* Footer styles */
+        .footer {
+            width: 1052px; /* Fixed width for the footer */
+            margin: 0 auto; /* Center the footer horizontally */
+            margin-top: 10px;
+            background-color: #f8f9fa; /* Change this color as needed */
+            padding: 10px 0;
+            text-align: center;
+            border-top: 1px solid #dee2e6; /* Add a border to separate footer from content */
+        }
+
+.col-custom-width {
+    width: 1052px; /* Set the custom width */
+  
+}
+
+.col-post-width {
+    width: 800px; 
+}
+.col-right-width {
+    width: 300px; 
+}
+  .badge-pill-shadow {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+  }
+        </style>
+    </head>
+    <body>
+        <!-- Main Body of Page -->
+        <div class="container">
+<!--            <div th:replace="fragments/topnav :: navbar"></div>-->
+                  <!-- Top Navigation -->
+        <div class="row justify-content-center">
+    
+                <div th:replace="fragments/topnav :: navbar" ></div>
+                <div class="col-md-0 col-custom-width" style="margin-top:  40px; ">
+                     <div class="row justify-content-center ">
+                            <div class="col-8 col-post-width">
+   
+                        <div th:each="post : ${posts}" >
+
+                            <div class="card"  style="margin-bottom: 20px; ">
+                                                                <img class="card-img-top" th:if="${postIdWithBase64Image[__${post.postId}__] != ''}" th:src="'data:image/jpg;base64,' + ${postIdWithBase64Image[__${post.postId}__]}" alt="Card image cap" style="height: 300px;"/>
+                                
+
+
+                                    <div class="card-body">
+                                    <h5 class="card-title" th:text="${post.title}">Card title</h5>
+                                    <p class="card-text">
+                                    
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="10" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="23" y1="2" x2="23" y2="6"></line>
+                                        <line x1="15" y1="2" x2="15" y2="6"></line>
+                                        <line x1="10" y1="10" x2="31" y2="10"></line>
+                                        </svg>
+                                         <small class="text-muted" th:text="${post.creationDate}" style="vertical-align: middle;">Date</small>
+                                        <span style="margin: 0 5px;">|</span>
+                                        <small th:each="tag : ${post.tags}" class="badge badge-pill badge-primary badge-pill-shadow mr-2" style="font-size: 70%;">
+                                            <small  th:text="${tag.name}"></small>
+                                        </small>
+                                    </p>
+
+                                    <p class="card-text" th:utext="${#strings.length(post.body) > 600 ? #strings.substring(post.body, 0, 600) + '...' : post.body}" >Text</p>
+
+                                    <p class="card-text d-flex justify-content-end" th:if="${#strings.length(post.body) > 600}">
+                                        <a th:href="@{/readMore(id=${post.postId})}" class="btn btn-link">Read More</a>
+                                    </p>
+                                    
+                                    <p class="card-text d-flex justify-content-between align-items-center" >
+                                       <small class="text-muted" th:text="'Last update: ' + ${post.updateDate}" th:if="${post.updateDate != null}">UpDate</small>
+                                       <small class="text-muted" th:text="'Expiry date: ' + ${post.expiryDate}" th:if="${post.expiryDate != null}">ExpiryDate</small>
+                                   </p>
+                                    
+                                   </div>
+                            </div>
+                        </div>
+                    </div>
+                <div class="col-md-4">
+                        <div class="card mb-4 text-left" style="width: 20.6rem;">
+
+<img class="card-img-top mx-auto mt-4" th:if="${base64AdminImage != ''}" th:src="'data:image/jpg;base64,' + ${base64AdminImage}" alt="Card image cap" style="height: 200px; width: 16rem;" />
+
+                           <div class="card-body">
+                                <h5 class="card-title text-center" th:text= "'Hi, I am ' + ${adminProfile.adminName} + '!'">Hi, I am !</h5>
+                               <p class="card-text" th:utext="${adminProfile.body}">About me</p>
+                            </div> 
+                        </div>
+                        <div class="card" style="width: 20.6rem;">
+                            <div class="card-body">
+                                <div class="text-center">
+                                    <h5 class="card-title">Tags</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">Search posts by tags</h6>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <a th:each="tag : ${allTags}" th:href="@{'~/index/?tag=' + ${tag.tagId}}" class="badge badge-pill badge-primary badge-pill-shadow mr-2" th:text="${tag.name}">Tags</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+         
+        </div >
+
+          </div >
+
+
+ </div> 
+        </div> 
+</div>
+
+        <!-- End main body -->
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>Copyright © My Blog!. All rights reserved.</p>
+        </div>
+    </footer>
+    <!-- End Footer -->
+        <!-- Optional JavaScript -->
+
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    </body>
+</html>
