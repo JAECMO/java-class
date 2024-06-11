@@ -15,6 +15,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface DefaultImageRepository extends JpaRepository<DefaultImage, Integer> {
-    public DefaultImage findFirstByOrderByDefaultImageIdAsc();
-    
+    public DefaultImage findFirstByOrderByDefaultImageIdAsc();    
 }

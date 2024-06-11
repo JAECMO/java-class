@@ -17,59 +17,13 @@ import org.springframework.security.core.userdetails.UserDetails;
  *
  * @author drjal
  */
-public class MyUserDetails implements UserDetails {
-    
-//    private String userName;
-//    
-//    public MyUserDetails(String userName) {
-//        this.userName = userName;
-//    }
-//    
-//    public MyUserDetails() {
-//    }
-//
-//
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
-//    }
-//
-//    @Override
-//    public String getPassword() {
-//        return "pass";
-//    }
-//
-//    @Override
-//    public String getUsername() {
-//        return userName;
-//    }
-//
-//    @Override
-//    public boolean isAccountNonExpired() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isAccountNonLocked() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isCredentialsNonExpired() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isEnabled() {
-//        return true;
-//    }
-//    
+public class MyUserDetails implements UserDetails { 
     
     private int userId;
-    private String userName;
-    private String password;
-    private boolean active;
-    private List<GrantedAuthority> authorities;
+    private final String userName;
+    private final String password;
+    private final boolean active;
+    private final List<GrantedAuthority> authorities;
 
     public MyUserDetails(User user) {
         this.userId = user.getUserId();

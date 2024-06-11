@@ -7,20 +7,71 @@
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
-        <title>Hero Manager</title>
+        <title>My Blog</title>
         <style>
-                                        body {
+            body {
                 background-color: #f8f9fa;  
             }
-                                 .col-custom-width {
+            .col-custom-width {
                 width: 1052px; /* Set the custom width */
-
             }
-            
-                        /* Add shadow to buttons */
+
+            /* Add shadow to buttons */
             .btn {
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+            .custom-column {
+                width: 95px; /* Adjust the width as needed */
+            }
+            .custom-font{
+                font-size: small; 
+                font-weight: bold;   
+            }
+            .deleted-user {
+                font-size: x-small;
+                color: red;
+            }
+            /* Popup container */
+            .popup {
+                display: none;
+                position: fixed;
+                z-index: 9;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgb(0,0,0);
+                background-color: rgba(0,0,0,0.4);
+            }
+
+            /* Popup content */
+            .popup-content {
+                position: relative;
+                background-color: #fff;
+                margin: auto;
+                margin-top: 20px;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 80%;
+                max-width: 500px;
+                border-radius: 5px;
+                text-align: center;
+            }
+
+            /* Close button */
+            .close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+            }
+
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
             }
         </style>
     </head>
@@ -28,191 +79,252 @@
         <!-- Main Body of Page -->
         <div class="col-custom-width container">
             <div class="row justify-content-center">
-            <div th:replace="fragments/topnav :: navbar">
+                <div th:replace="fragments/topnav :: navbar">
+                </div>
+                <div class="col-12 col-custom-width text-center" style="margin-top: 40px;">  <h3>Edit Posts</h3></div>
+
+
+                <div class="col-md-12">
+                    <form th:action="@{/filteredPosts}" method="post" onsubmit="return validateForm()">
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label for="filterAttribute">Filter by Attribute:</label>
+                                <select class="form-control" id="filterAttribute" name="filterAttribute" onchange="showOptions()">
+                                    <option value="" disabled selected>Select your option</option>
+                                    <option value="id" th:selected="${filterAttribute == 'id'}">ID</option>
+                                    <option value="author" th:selected="${filterAttribute == 'author'}">Author</option>
+                                    <option value="submittedDate" th:selected="${filterAttribute == 'submittedDate'}">Submitted Date</option>
+                                    <option value="creationDate" th:selected="${filterAttribute == 'creationDate'}">Creation Date</option>
+                                    <option value="updateDate" th:selected="${filterAttribute == 'updateDate'}">Last Update Date</option>
+                                    <option value="displayDate" th:selected="${filterAttribute == 'displayDate'}">Display Date</option>
+                                    <option value="expiryDate" th:selected="${filterAttribute == 'expiryDate'}">Expiry Date</option>
+                                    <option value="active" th:selected="${filterAttribute == 'active'}">Active</option>
+                                    <option value="approved" th:selected="${filterAttribute == 'approved'}">Approved</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3" id="orderOptions" style="display: none;" >
+                                <label for="filterOrder">Filter Order:</label>
+                                <select class="form-control" id="filterOrder" name="filterOrder">
+                                    <option value="">Select the order</option>
+                                    <option value="asc" th:selected="${filterOrder == 'asc'}"></option>
+                                    <option value="desc" th:selected="${filterOrder == 'desc'}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3" id="authorOptions" style="display: none;">
+                                <label for="filterAuthor">Filter by Author:</label>
+                                <select class="form-control" id="filterAuthor" name="filterAuthor">
+                                    <option value="" selected>Select the author</option>
+                                    <!-- Loop over unique author names -->
+                                    <option th:each="author : ${authorList}" 
+                                            th:text="${author.userName}" 
+                                            th:value="${author.userId}" 
+                                            th:selected="${author.userName eq selectedAuthorName}"> Author Name</option>
+
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3" id="yesOrNoOptions" style="display: none;">
+                                <label for="filterYesOrNo">Filter by Author:</label>
+                                <select class="form-control" id="filterYesOrNo" name="filterYesOrNo">
+                                    <option value="">Select your choice</option>
+                                    <option value="yes" th:selected="${filterYesOrNo == 'yes'}">Yes</option>
+                                    <option value="no" th:selected="${filterYesOrNo == 'no'}">No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="clickedId" class="btn btn-primary" onclick="clicked()">Apply Filters</button>
+                    </form>
+                </div>
+
+
+                <!-- Table content for approved posts -->
+                <div class="row justify-content-center">
+                    <div class="col-md-12">
+                        <div class="col-12 col-custom-width text-center" style="margin-top: 40px;">  <h3>Post List</h3></div>
+                        <table class="table table-borderless" style="margin-top: 40px;">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>Submitted</th>
+                                    <th class="custom-column">Created</th>
+                                    <th>Updated</th>
+                                    <th class="custom-column">Display</th>
+                                    <th class="custom-column">Expiry</th>
+                                    <th>Author</th>
+                                    <th>Active</th>
+                                    <th>Approved</th>
+                                    <th>Update</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Use th:if to filter rows based on user input -->
+                                <tr th:each="userPost : ${userPostList}">
+                                    <td th:text="${userPost.post.postId}"></td>
+                                    <td th:text="${userPost.post.title}"></td>
+                                    <td th:text="${#dates.format(userPost.post.submittedDate, 'yyyy-MM-dd HH:mm:ss')}" class="custom-font"></td>
+                                    <td th:text="${#dates.format(userPost.post.creationDate, 'yyyy-MM-dd HH:mm:ss')}" class="custom-font"></td>
+                                    <td th:text="${#dates.format(userPost.post.updateDate, 'yyyy-MM-dd HH:mm:ss')}" class="custom-font"></td>
+                                    <td th:text="${#dates.format(userPost.post.displayDate, 'yyyy-MM-dd')}" class="custom-column custom-font" ></td>
+                                    <td th:text="${#dates.format(userPost.post.expiryDate, 'yyyy-MM-dd')}" class="custom-column custom-font"></td>
+                                    <td>
+                                        <span th:text="${userPost.user.userName}"></span>
+                                        <span th:if="${userPost.user.deleted}" class="deleted-user">deleted user</span>
+                                    </td>
+
+                                    <td th:text="${userPost.post.active} ? 'Yes' : 'No'"></td>
+                                    <td th:text="${userPost.post.approved} ? 'Yes' : 'No'"></td>
+                                    <td><a href="#" th:href="@{/updatePost(id=${userPost.post.postId})}">Update</a></td>
+                                    <td><a href="#" th:href="@{/removePost(id=${userPost.post.postId})}" class="delete-link">Delete</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>              
             </div>
-<div class="col-12 col-custom-width text-center" style="margin-top: 40px;">  <h3>Edit Posts</h3></div>
+            <div class="modal fade" id="alertModalUpdate" tabindex="-1" role="dialog" aria-labelledby="alertModalUpdateLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="alertModalUpdateLabel">Custom Title</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="alertModalUpdateAlertMessage">
+                            <!-- Error message will be inserted here dynamically -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="confirmDeleteBtn" data-dismiss="modal">Yes</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                        </div>
 
-
-        <div class="col-md-12">
-            <form th:action="@{/filteredPosts}" method="post" onsubmit="return validateForm()">
-    <div class="form-row">
-        <div class="form-group col-md-3">
-            <label for="filterAttribute">Filter by Attribute:</label>
-            <select class="form-control" id="filterAttribute" name="filterAttribute" onchange="showOptions()">
-                <option value="" disabled selected>Select your option</option>
-                <option value="id" th:selected="${filterAttribute == 'id'}">ID</option>
-                <option value="author" th:selected="${filterAttribute == 'author'}">Author</option>
-                <option value="creationDate" th:selected="${filterAttribute == 'creationDate'}">Creation Date</option>
-                <option value="updateDate" th:selected="${filterAttribute == 'updateDate'}">Last Update Date</option>
-                <option value="displayDate" th:selected="${filterAttribute == 'displayDate'}">Display Date</option>
-                <option value="expiryDate" th:selected="${filterAttribute == 'expiryDate'}">Expiry Date</option>
-                <option value="active" th:selected="${filterAttribute == 'active'}">Active</option>
-                <option value="approved" th:selected="${filterAttribute == 'approved'}">Approved</option>
-            </select>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="form-group col-md-3" id="orderOptions" style="display: none;" >
-            <label for="filterOrder">Filter Order:</label>
-            <select class="form-control" id="filterOrder" name="filterOrder">
-                <option value="">Select the order</option>
-                <option value="asc" th:selected="${filterOrder == 'asc'}">Ascending</option>
-                <option value="desc" th:selected="${filterOrder == 'desc'}">Descending</option>
-            </select>
+        <!-- Popup window -->
+        <div id="postSavedPopup" class="popup">
+            <div class="popup-content">
+                <span class="close" onclick="closePopup()">&times;</span>
+                <h5 th:text="${postSavedSuccess}">Post saved</h5>
+            </div>
         </div>
-        <div class="form-group col-md-3" id="authorOptions" style="display: none;">
-            <label for="filterAuthor">Filter by Author:</label>
-            <select class="form-control" id="filterAuthor" name="filterAuthor">
-                <option value="" selected>Select the author</option>
-                <!-- Loop over unique author names -->
-                <option th:each="author : ${authorList}" 
-                        th:text="${author.userName}" 
-                        th:value="${author.userId}" 
-                        th:selected="${author.userName eq selectedAuthorName}"> Author Name</option>
-                
-            </select>
-        </div>
-        <div class="form-group col-md-3" id="yesOrNoOptions" style="display: none;">
-            <label for="filterYesOrNo">Filter by Author:</label>
-            <select class="form-control" id="filterYesOrNo" name="filterYesOrNo">
-                <option value="">Select your choice</option>
-                <option value="yes" th:selected="${filterYesOrNo == 'yes'}">Yes</option>
-                <option value="no" th:selected="${filterYesOrNo == 'no'}">No</option>
-            </select>
-        </div>
-    </div>
-<!--    <button type="button" class="btn btn-secondary" onclick="resetFilters()">Reset Filters</button>-->
-    <button type="submit" class="btn btn-primary">Apply Filters</button>
-</form>
-        </div>
-    
-
-    <!-- Table content for approved posts -->
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-   <div class="col-12 col-custom-width text-center" style="margin-top: 40px;">  <h3>Post List</h3></div>
-            <table class="table table-borderless" style="margin-top: 40px;">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Title</th>
-                        <th>Creation Date</th>
-                        <th>Last Update Date</th>
-                        <th>Display Date</th>
-                        <th>Expiry Date</th>
-                        <th>Author</th>
-                        <th>Active</th>
-                        <th>Approved</th>
-                        <th>Update</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Use th:if to filter rows based on user input -->
-                    <tr th:each="userPost : ${userPostList}">
-                        <td th:text="${userPost.post.postId}"></td>
-                        <td th:text="${userPost.post.title}"></td>
-                        <td th:text="${userPost.post.creationDate}"></td>
-                        <td th:text="${userPost.post.updateDate}"></td>
-                        <td th:text="${userPost.post.displayDate}"></td>
-                        <td th:text="${userPost.post.expiryDate}"></td>
-                        <td th:text="${userPost.user.userName}"></td>
-                        <td th:text="${userPost.post.active} ? 'Yes' : 'No'"></td>
-                        <td th:text="${userPost.post.approved} ? 'Yes' : 'No'"></td>
-                        <td><a href="#" th:href="@{/updatePost(id=${userPost.post.postId})}">Update</a></td>
-                        <td><a href="#" th:href="@{/removePost(id=${userPost.post.postId})}">Delete</a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-
-
-
-</div> 
-        </div>  
-
-
         <!-- End main body -->
-
         <!-- Optional JavaScript -->
-        <script type="text/javascript">
-//            function resetOptions() {
-//                // Reset values
-//    
-//    document.getElementById("filterYesOrNo").value = ""; 
-////             // Reset selected options
-////    var selectAscOrDesc = document.getElementById("filterOrder");
-////    selectAscOrDesc.querySelector("option[selected]").removeAttribute("selected");
-////    selectAscOrDesc.querySelector("option[value='']").setAttribute("selected", ""); 
-//                
-//            }
-            
-//             function resetOptions2() {
-//                // Reset values
-//    document.getElementById("filterOrder").value = "";
-//
-////             // Reset selected options
-////    var selectAscOrDesc = document.getElementById("filterOrder");
-////    selectAscOrDesc.querySelector("option[selected]").removeAttribute("selected");
-////    selectAscOrDesc.querySelector("option[value='']").setAttribute("selected", ""); 
-//                
-//            }
-     function showOptions() {        
-        var attribute = document.getElementById("filterAttribute").value;
-        var orderOptions = document.getElementById("orderOptions");
-        var authorOptions = document.getElementById("authorOptions");
-        var yesOrNoOptions = document.getElementById("yesOrNoOptions");
-        
-        // Hide all additional option
-        orderOptions.style.display = "none";
-        authorOptions.style.display = "none";
-        yesOrNoOptions.style.display = "none";
-        // Show options based on selected attribute
-        if (attribute === "id" || attribute === "creationDate" || attribute === "updateDate" || attribute === "displayDate" || attribute === "expiryDate") {
-            orderOptions.style.display = "block";
-        } else if (attribute === "author") {
-            document.getElementById("filterOrder").value = "";
-            document.getElementById("filterYesOrNo").value = "";
-            authorOptions.style.display = "block";
-        }else if(attribute === "active" || attribute === "approved"){
-            document.getElementById("filterOrder").value = "";
-            yesOrNoOptions.style.display = "block";
-        }
-        // Add conditions for other attributes here
-    }
+        <script th:inline="javascript">
 
+            document.getElementById("clickedId").onclick = function () {
+                showOptions();
+            };
 
-    
-    
-    function validateForm() {
-        var filterOrder = document.getElementById("filterOrder").value;
-         var filterYesOrNo = document.getElementById("filterYesOrNo").value;
-         var filterAuthor = document.getElementById("filterAuthor").value;
-         var attribute = document.getElementById("filterAttribute").value;
-         
-        if (filterOrder === "" && filterYesOrNo === "" && filterAuthor === "") {
-            // If filterCreationDate is empty, prevent form submissionfilterYesOrNo
-            return false;
-        }else if ((attribute === "id" || attribute === "creationDate" || attribute === "updateDate" || attribute === "displayDate" || attribute === "expiryDate") && filterOrder === "" ){
-        // Otherwise, allow form submission
-        return false;
-    }else if((attribute === "active" || attribute === "approved") && filterYesOrNo === ""){
-        
-         return false;
-    }else if((attribute === "author") && filterAuthor === ""){
-        
-       return false; 
-    }else{
-         return true; 
-    }
-    }
-    
-     // Call showOptions() when the page loads or reloads
-    window.onload = function() {
-        showOptions();
-    }
+            function showOptions() {
+                var attribute = document.getElementById("filterAttribute").value;
+                var orderOptions = document.getElementById("orderOptions");
+                var authorOptions = document.getElementById("authorOptions");
+                var yesOrNoOptions = document.getElementById("yesOrNoOptions");
 
-</script>
+                // Hide all additional option
+                orderOptions.style.display = "none";
+                authorOptions.style.display = "none";
+                yesOrNoOptions.style.display = "none";
+                // Show options based on selected attribute
+                if (attribute === "id") {
+                    orderOptions.style.display = "block";
+                    setOrderOptionText("Ascending", "Descending");
+                } else if (attribute === "creationDate" || attribute === "updateDate" || attribute === "displayDate" || attribute === "expiryDate" || attribute === "submittedDate") {
+                    orderOptions.style.display = "block";
+                    setOrderOptionText("Oldest", "Newest");
+                } else if (attribute === "author") {
+                    document.getElementById("filterOrder").value = "";
+                    document.getElementById("filterYesOrNo").value = "";
+                    authorOptions.style.display = "block";
+                } else if (attribute === "active" || attribute === "approved") {
+                    document.getElementById("filterOrder").value = "";
+                    yesOrNoOptions.style.display = "block";
+                }
+            }
+
+            function setOrderOptionText(ascText, descText) {
+                var ascOption = document.querySelector("#filterOrder option[value='asc']");
+                var descOption = document.querySelector("#filterOrder option[value='desc']");
+
+                ascOption.textContent = ascText;
+                descOption.textContent = descText;
+            }
+
+            function validateForm() {
+                var filterOrder = document.getElementById("filterOrder").value;
+                var filterYesOrNo = document.getElementById("filterYesOrNo").value;
+                var filterAuthor = document.getElementById("filterAuthor").value;
+                var attribute = document.getElementById("filterAttribute").value;
+
+                if (filterOrder === "" && filterYesOrNo === "" && filterAuthor === "") {
+                    // If filterCreationDate is empty, prevent form submissionfilterYesOrNo
+                    return false;
+                } else if ((attribute === "id" || attribute === "creationDate" || attribute === "updateDate" || attribute === "displayDate" || attribute === "expiryDate" || attribute === "submittedDate") && filterOrder === "") {
+                    // Otherwise, allow form submission
+                    return false;
+                } else if ((attribute === "active" || attribute === "approved") && filterYesOrNo === "") {
+
+                    return false;
+                } else if ((attribute === "author") && filterAuthor === "") {
+
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            var deleteUrl = "";
+
+            // Function to handle user response in modal
+            document.getElementById("confirmDeleteBtn").onclick = function () {
+                window.location.href = deleteUrl;
+            };
+
+            document.querySelectorAll('.delete-link').forEach(function (element) {
+                element.onclick = function (event) {
+                    event.preventDefault();
+                    deleteUrl = this.getAttribute("href");
+                    document.getElementById("alertModalUpdateLabel").innerText = "Validation Delete";
+                    document.getElementById("alertModalUpdateAlertMessage").innerText = "Are you sure you want to delete this post?";
+                    $('#alertModalUpdate').modal('show');
+                };
+            });
+
+            // Function to open the popup
+            function openPopup() {
+                document.getElementById('postSavedPopup').style.display = 'block';
+            }
+
+            // Function to close the popup
+            function closePopup() {
+                document.getElementById('postSavedPopup').style.display = 'none';
+            }
+
+            /*<![CDATA[*/
+            var postSavedSuccess = /*[[${postSavedSuccess}]]*/ '';
+            /*]]>*/
+
+            /*<![CDATA[*/
+            var filterAttribute = /*[[${filterAttribute}]]*/ '';
+            /*]]>*/
+
+            // Call showOptions() when the page loads or reloads
+            window.onload = function () {
+
+                if (postSavedSuccess !== '') {
+                    openPopup();
+                }
+
+                if (filterAttribute !== "") {
+                    showOptions();
+                }
+
+            }
+        </script>
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>

@@ -8,18 +8,12 @@
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         <script src='https://cdn.tiny.cloud/1/tndormjvtp20luboz7yylhhcrlpyxii7jex75e6kotca6fn4/tinymce/4/tinymce.min.js'></script>
-        <!--<script th:inline="javascript">
-            /*<![CDATA[*/
-            var error = /*[[${error}]]*/ '';
-            /*]]>*/
-        </script>-->
         <script>
             tinymce.init({
                 selector: '#mytextarea'
             });
-
         </script>
-        <title>Hero Manager</title>
+        <title>My Blog</title>
         <style>
 
             body {
@@ -59,15 +53,54 @@
             .redirect-button:hover {
                 background-color:transparent;
             }
-            
-        
-        </style>
 
+            /* Popup container*/
+            .popup {
+                display: none;
+                position: fixed;
+                z-index: 9;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgb(0,0,0);
+                background-color: rgba(0,0,0,0.4);
+            }
+
+            /* Popup content */
+            .popup-content {
+                position: relative;
+                background-color: #fff;
+                margin: auto;
+                margin-top: 20px;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 80%;
+                max-width: 500px;
+                border-radius: 5px;
+                text-align: center;
+            }
+
+            /* Close button */
+            .close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+            }
+
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
+        </style>
     </head>
     <body>
         <!-- Main Body of Page -->
         <div class="col-custom-width container">
-
             <div class="row justify-content-center">
                 <div th:replace="fragments/topnav :: navbar">
                 </div>
@@ -86,10 +119,7 @@
                         <div class="col-9 col-custom-width">  
                             <div class="col-12 col-custom-width text-center">  <h3>Write Your Blog</h3></div>
 
-
                             <form action="addPost" method="POST" enctype="multipart/form-data" class="form" onsubmit="return validateForm()">
-
-
 
                                 <!-- Image input field -->
                                 <div></div>
@@ -105,18 +135,18 @@
                                 <label class="col-0" for="mytextarea" style="text-decoration: underline;">Body</label>
                                 <textarea id="mytextarea" name="body">Hello, World!</textarea>
                                 <div class="form-group row" style="margin-top: 10px;">
-                                    
+
                                     <div class="col-12">
                                         <label class="col-0" for="tags" style="text-decoration: underline;">Tags</label>
                                         <div>
-                                        <label th:each="tag : ${tags}">
-                                            <input type="checkbox" id="tags" name="selectedTags" th:value="${tag.tagId}"/>
-                                            <span th:text="${tag.name} + '&nbsp;'"></span> 
-                                        </label>
-                                            </div>
+                                            <label th:each="tag : ${tags}">
+                                                <input type="checkbox" id="tags" name="selectedTags" th:value="${tag.tagId}"/>
+                                                <span th:text="${tag.name} + '&nbsp;'"></span> 
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                                
+
                                 <label class="col-0" for="date" style="text-decoration: underline;">Time management</label>
                                 <div class="form-group row" id="date">
                                     <div class="col-5">
@@ -144,8 +174,6 @@
                                     </div>
                                 </div>
 
-
-                                <!-- Add a container div to group both date inputs -->
                                 <div id="dateInputsContainer" class="form-group row">
                                     <div id="displayDateStr">
                                         <div class="col-auto" id="displayLabel" >
@@ -167,8 +195,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-
 
                                 <input type="hidden" name="id" th:value="${userId}"/>
 
@@ -205,36 +231,38 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Popup window -->
+        <div id="postAddedOrSavedPopup" class="popup">
+            <div class="popup-content">
+                <span class="close" onclick="closePopup()">&times;</span>
+                <h5 id="popupMessage"></h5>
+            </div>
+        </div>
         <!-- End main body -->
-
         <!-- Optional JavaScript -->
-        <script>
+        <script th:inline="javascript">
 
-                        // Get today's date
-             var today = new Date();
+            // Get today's date
+            var today = new Date();
 
-             // Get tomorrow's date
-             var tomorrow = new Date();
-             tomorrow.setDate(today.getDate() + 1);
+            // Get tomorrow's date
+            var tomorrow = new Date();
+            tomorrow.setDate(today.getDate() + 1);
             // Set the max attribute to today's date
-            document.getElementById('displayDateStrDisplay').min = new Date().toISOString().split('T')[0];
+            document.getElementById('displayDateStrDisplay').min = tomorrow.toISOString().split('T')[0];
             document.getElementById('expiryDateStrDisplay').min = tomorrow.toISOString().split('T')[0];
 
             function validateForm() {
 
-// var error = document.getElementById('error');
-
                 // Additional validation for the title and body fields
                 var title = document.getElementById('postTitle').value.trim();
                 var body = tinymce.activeEditor.getContent({format: 'text'}).trim();
-                
+
                 var displayDate = document.getElementById('displayDateStrDisplay').value;
                 var expiryDate = document.getElementById('expiryDateStrDisplay').value;
 
@@ -281,9 +309,9 @@
                 }
 
                 // Validate body length
-                if (body.length > 500) {
+                if (body.length > 1000) {
                     var customTitle = "Validation Error";
-                    var errorMessage = "Body should have at most 500 characters.";
+                    var errorMessage = "Body should have at most 1000 characters.";
 
                     // Display custom alert
                     document.getElementById("customAlertModalLabel").innerHTML = customTitle;
@@ -310,11 +338,9 @@
                     return false;
                 }
 
-
-
                 // Check if no checkboxes are selected
                 if (checkboxes.length > 3) {
-                    var customTitle = "Validation Error";
+                    var customTitle = "Tag Validation Error";
                     var errorMessage = "Please select a maximum of 3 tags";
 
                     // Display custom alert
@@ -325,8 +351,8 @@
                     // Prevent form submission
                     return false;
                 }
-                
-                    if (displayDate !== "" && expiryDate !== "") {
+
+                if (displayDate !== "" && expiryDate !== "") {
                     // Convert displayDate and expiryDate to Date objects
                     var displayDateObj = new Date(displayDate);
                     var expiryDateObj = new Date(expiryDate);
@@ -350,7 +376,7 @@
                         // Prevent form submission
                         return false;
                     }
-                        }
+                }
 
 
                 // Continue with form submission
@@ -379,6 +405,34 @@
                     dateInput.style.display = 'none'; // Hide the date input
                     label.style.display = 'none'; // Hide the label
                     dateInput.value = null; // Reset the value
+                }
+            }
+
+            // Function to open the popup
+            function openPopup(message) {
+                var popupContent = document.getElementById('popupMessage');
+                popupContent.textContent = message;
+                document.getElementById('postAddedOrSavedPopup').style.display = 'block';
+            }
+
+            // Function to close the popup
+            function closePopup() {
+                document.getElementById('postAddedOrSavedPopup').style.display = 'none';
+            }
+            /*<![CDATA[*/
+            var postAdditionSuccess = /*[[${postAdditionSuccess}]]*/ '';
+            /*]]>*/
+
+            /*<![CDATA[*/
+            var postSavedSuccess = /*[[${postSavedSuccess}]]*/ '';
+            /*]]>*/
+
+            // Show the popup if postAdditionSuccess/postSavedSuccess are not empty
+            window.onload = function () {
+                if (postAdditionSuccess !== "") {
+                    openPopup(postAdditionSuccess);
+                } else if (postSavedSuccess !== "") {
+                    openPopup(postSavedSuccess);
                 }
             }
 

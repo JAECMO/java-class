@@ -23,13 +23,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-     @Autowired
+
+    @Autowired
     UserDetailsService userDetailsService;
-     
-     @Autowired
+
+    @Autowired
     private MyAccessDeniedHandler accessDeniedHandler;
-     
-     @Autowired
+
+    @Autowired
     private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
     @Override
@@ -40,12 +41,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/register").hasRole("ADMIN") 
+                .antMatchers("/register").hasRole("ADMIN")
                 .antMatchers("/userList").hasRole("ADMIN")
                 .antMatchers("/updateUser").hasRole("ADMIN")
-                .antMatchers("/errorImage").hasRole("ADMIN")
                 .antMatchers("/updatePost").hasRole("ADMIN")
                 .antMatchers("/defaultImage").hasRole("ADMIN")
+                .antMatchers("/tags").hasRole("ADMIN")
+                .antMatchers("/updateTag").hasRole("ADMIN")
+                .antMatchers("/editPosts").hasRole("ADMIN")
+                .antMatchers("/editAdminProfile").hasRole("ADMIN")
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/user").hasAnyRole("ADMIN", "USER")
                 .and().formLogin()
@@ -61,13 +65,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler); // Set the custom AccessDeniedHandler
     }
-    
-//                    .and()
-//                .defaultSuccessUrl("/default") // Redirect for regular users
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder();
-//            return NoOpPasswordEncoder.getInstance();
     }
 }

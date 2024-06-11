@@ -14,8 +14,6 @@ import org.springframework.stereotype.Repository;
  * @author drjal
  */
 @Repository
-public interface AdminProfileRepository extends JpaRepository<AdminProfile,Integer> {
-    
-    public AdminProfile findFirstByOrderByAdminProfileIdAsc();
-    
+public interface AdminProfileRepository extends JpaRepository<AdminProfile,Integer> { 
+    public AdminProfile findFirstByOrderByAdminProfileIdAsc();   
 }

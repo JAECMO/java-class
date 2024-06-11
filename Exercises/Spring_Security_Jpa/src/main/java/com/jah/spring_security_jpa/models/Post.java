@@ -17,7 +17,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -38,41 +37,20 @@ public class Post {
     private String title;
     @Column(columnDefinition = "TEXT", length = 1000)
     private String body;
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date displayDate;
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date updateDate;
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date expiryDate;
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date creationDate;
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date submittedDate;
-    private int imageId;
-    
+    private int imageId;   
     private boolean approved = true;
-   
     private boolean active = true;
-   
-
-    
-//    @ManyToOne
-//    @JoinColumn(name = "userId", nullable = true)
-//    private User user;
-    
-//    @ManyToMany(mappedBy = "posts")
-//    private List<User> users;
-    
-
-
-//    public User getUser() {
-//        return user;
-//    }
-//
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
-
+  
     
     @ManyToMany
     @JoinTable(name = "post_tag",
@@ -85,16 +63,6 @@ public class Post {
     @OneToOne(mappedBy = "post", cascade = CascadeType.ALL)
     private PhotoDTO postImage; 
 
-    
-
-//    public List<User> getUsers() {
-//        return users;
-//    }
-//
-//    public void setUsers(List<User> users) {
-//        this.users = users;
-//    }
-//    
 
     public PhotoDTO getPostImage() {
         return postImage;
@@ -175,41 +143,6 @@ public class Post {
     public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
-    
-        
-//        
-//     public User getUser() {
-//        return user;
-//    }
-//
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
-    
-//    public Date getCreateDate() {
-//        return createDate;
-//    }
-//
-//    public void setCreateDate(Date createDate) {
-//        this.createDate = createDate;
-//    }
-//
-//    public Date getUpdateDate() {
-//        return updateDate;
-//    }
-//
-//    public void setUpdateDate(Date updateDate) {
-//        this.updateDate = updateDate;
-//    }
-//
-//    public Date getExpiryDate() {
-//        return expiryDate;
-//    }
-//
-//    public void setExpiryDate(Date expiryDate) {
-//        this.expiryDate = expiryDate;
-//    }
-
 
     public int getPostId() {
         return postId;

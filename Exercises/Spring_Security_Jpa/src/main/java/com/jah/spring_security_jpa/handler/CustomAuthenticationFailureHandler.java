@@ -30,7 +30,7 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
             AuthenticationException exception) throws IOException, ServletException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        boolean activationPending = checkActivationStatus(username,password);
+        boolean activationPending = checkActivationStatus(username, password);
 
         if (activationPending) {
             setDefaultFailureUrl("/login?error=true&message=Activation pending");
@@ -42,7 +42,6 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
     }
 
     private boolean checkActivationStatus(String username, String password) {
-        // Assuming your userService has a method to check activation status
-        return userService.isActivationPending(username,password);
+        return userService.isActivationPending(username, password);
     }
 }

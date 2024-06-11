@@ -16,14 +16,14 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class PhotoDTOService {
-    
-      @Autowired
+
+    @Autowired
     private PhotoDTORepository photoDTORepository;
 
     public byte[] getImageByPostId(int postId) {
         // Find the PhotoDTO by post ID
         PhotoDTO photoDTO = photoDTORepository.findByPostPostId(postId);
-        
+
         // Check if the PhotoDTO exists
         if (photoDTO != null) {
             // Return the image data
@@ -33,5 +33,5 @@ public class PhotoDTOService {
             return null;
         }
     }
-    
+
 }

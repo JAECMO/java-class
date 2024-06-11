@@ -10,6 +10,7 @@ import com.jah.spring_security_jpa.repositories.TagRepository;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,27 +19,35 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TagService {
-    
+
     @Autowired
     private TagRepository tagRepository;
-    
-        public Tag getTagById(int tagId) {
+
+    public Tag getTagById(int tagId) {
         return tagRepository.findById(tagId)
                 .orElseThrow(() -> new RuntimeException("Tag not found with ID: " + tagId));
     }
+
     public List<Tag> getAllTags() {
         return tagRepository.findAll();
     }
-    
-    public List<Tag> getTagsById(List<String> intList){
+
+    public List<Tag> getTagsById(List<String> intList) {
         List<Tag> tagList = new ArrayList();
-        
+
         for (String index : intList) {
             Tag tag = tagRepository.getOne(Integer.parseInt(index));
             tagList.add(tag);
         }
-        
+
         return tagList;
     }
-    
+
+    public List<Tag> getSortedTags(String field, String sortOrder) {
+
+        Sort sort = sortOrder.equalsIgnoreCase("asc") ? Sort.by(Sort.Direction.ASC, field) : Sort.by(Sort.Direction.DESC, field);
+        return tagRepository.findAll(sort);
+
+    }
+
 }

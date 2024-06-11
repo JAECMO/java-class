@@ -5,14 +5,10 @@
  */
 package com.jah.spring_security_jpa.models;
 
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
 
 
 /**
@@ -27,43 +23,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
     
-//    @Column(unique = true)
     private String userName;
     private String password;
     private boolean active;
     private String roles;
-    
-    
-//    @ManyToMany
-//    @JoinTable(name = "user_post",
-//            joinColumns = {@JoinColumn(name = "userId")},
-//            inverseJoinColumns = {@JoinColumn(name = "postId")})
-//    private List<Post> posts;
-
-//    @ManyToMany
-//    @JoinTable(name = "user_post",
-//            joinColumns = {@JoinColumn(name = "userId")},
-//            inverseJoinColumns = {@JoinColumn(name = "postId")})
-//    private List<Post> posts;
-//
-//    public List<Post> getPosts() {
-//        return posts;
-//    }
-//
-//    public void setPosts(List<Post> posts) {
-//        this.posts = posts;
-//    }
-
-//    public List<Post> getPosts() {
-//        return posts;
-//    }
-//
-//    public void setPosts(List<Post> posts) {
-//        this.posts = posts;
-//    }
-
-
-    
+    private boolean deleted = false;
     
     public int getUserId() {
         return userId;
@@ -105,7 +69,12 @@ public class User {
     public void setRoles(String roles) {
         this.roles = roles;
     }
-    
-    
-    
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 }

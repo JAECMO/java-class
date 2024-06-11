@@ -29,4 +29,5 @@ public interface TagRepository extends JpaRepository<Tag, Integer>  {
     @Modifying
     @Query(value = "DELETE FROM Tag t WHERE t.tagId = :tagId", nativeQuery = true)
     void deleteTagByTagId(@Param("tagId") int tagId);
+
 }

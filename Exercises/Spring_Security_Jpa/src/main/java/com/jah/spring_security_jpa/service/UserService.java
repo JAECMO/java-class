@@ -9,8 +9,10 @@ import com.jah.spring_security_jpa.models.RegistrationForm;
 import com.jah.spring_security_jpa.models.User;
 import com.jah.spring_security_jpa.repositories.UserRepository;
 import java.util.List;
+import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +29,17 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    public boolean usernameExists(String username) {
+        Optional<User> user = userRepository.findByUserName(username);
+        return user.isPresent();
+    }
+
     @Transactional
-    public void registerUser(RegistrationForm form) {
+    public void registerUser(RegistrationForm form) throws Exception {
+        if (usernameExists(form.getUsername())) {
+            throw new Exception("Username already exists");
+        }
+
         User user = new User();
         user.setUserName(form.getUsername());
         user.setPassword(passwordEncoder.encode(form.getPassword()));
@@ -36,31 +47,23 @@ public class UserService {
         user.setActive(false);
         user.setRoles("ROLE_USER");
         userRepository.save(user);
+
     }
 
     @Transactional
-    public void updateUserDetails(User user, boolean activationStatus) {
-        // Encode the password before updating
-//        String encodedPassword = passwordEncoder.encode(user.getPassword());
-//encodedPassword);
-
-//        userRepository.updateUserDetails(
-//                user.getId(),
-//                user.getUserName());
-// Ensure that the entity is in a managed state before calling update
-        User managedUser = userRepository.findById(user.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + user.getUserId()));
-
-        // Update the managed user
-        managedUser.setUserName(user.getUserName());
-        managedUser.setActive(activationStatus);
-        userRepository.save(managedUser);
+    public void updateUserDetails(User user, boolean activationStatus, String password) {
+        user.setActive(activationStatus);
+        if (!password.isEmpty()) {
+            BCryptPasswordEncoder bCpasswordEncoder = new BCryptPasswordEncoder();
+            String encodedPassword = bCpasswordEncoder.encode(password);
+            user.setPassword(encodedPassword);
+        }
+        userRepository.save(user);
 
     }
 
-    public User getUserById(int userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+    public User getUserById(int id) {
+        return userRepository.findById(id).orElse(null);
     }
 
     public User getUserByName(String name) {
@@ -71,9 +74,6 @@ public class UserService {
         return userRepository.findAll();
     }
 
-//    public void updateUserDetails(int userId, String newUsername, String password) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
     public boolean verifyPassword(String username, String password) {
         User user = getUserByName(username);
 

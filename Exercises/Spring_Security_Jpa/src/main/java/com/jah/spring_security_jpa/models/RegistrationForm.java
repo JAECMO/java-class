@@ -32,7 +32,6 @@ public class RegistrationForm {
         return active;
     }
 
-    // Add other registration fields as needed
     // Getters and setters
     public void setActive(boolean active) {
         this.active = active;

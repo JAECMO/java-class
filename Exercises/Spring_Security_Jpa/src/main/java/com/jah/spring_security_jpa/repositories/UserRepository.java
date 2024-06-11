@@ -6,7 +6,6 @@
 package com.jah.spring_security_jpa.repositories;
 
 import com.jah.spring_security_jpa.models.User;
-import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,19 +20,15 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
+    
     Optional<User> findByUserName(String userName);
-   
-//     @Query("UPDATE User u SET u.username = :username, u.email = :email, u.password = :password WHERE u.id = :userId")
+
     @Modifying
     @Query("UPDATE User u SET u.userName = :userName, u.active = :active WHERE u.id = :id")
     void updateUserDetails(
             @Param("id") int id,
             @Param("userName") String userName,
             @Param("active") boolean active);
-            
-//@Param("password") String password);
-//                @Param("email") String email,
-//    boolean existsByUserName(String userName);
     
     @Transactional
     @Modifying

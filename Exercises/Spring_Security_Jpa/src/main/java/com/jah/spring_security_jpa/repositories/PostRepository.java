@@ -6,7 +6,6 @@
 package com.jah.spring_security_jpa.repositories;
 
 import com.jah.spring_security_jpa.models.Post;
-import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -20,14 +19,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer> {
-List<Post> getPostsSortedByCreationDate(String sortOrder);
-List<Post> getPostsSortedByUpdateDate(String sortOrder);
-List<Post> getPostsSortedByDisplayDate(String sortOrder);
-List<Post> getPostsSortedByExpiryDate(String sortOrder);
-List<Post> getPostsSortedByActive(String sortChoice);
-List<Post> getPostsSortedByApproved(String sortChoice);
-List<Post> getPostsSortedByPostId(String sortOrder);
-
     
     @Transactional
     @Modifying
