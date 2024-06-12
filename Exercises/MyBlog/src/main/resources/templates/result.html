@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <title>My Blog</title>
+        <script type="text/javascript">
+            // Function to reset form fields
+            function resetFilters() {
+                // Get all form elements by their IDs
+                var filterId = document.getElementById("filterId");
+                var filterAuthor = document.getElementById("filterAuthor");
+                var filterCreationDate = document.getElementById("filterCreationDate");
+                var filterUpdateDate = document.getElementById("filterUpdateDate");
+                var filterDisplayDate = document.getElementById("filterDisplayDate");
+                var filterExpiryDate = document.getElementById("filterExpiryDate");
+                var filterActive = document.getElementById("filterActive");
+                var filterApproved = document.getElementById("filterApproved");
+
+                // Reset the selected options to the first option in each dropdown
+                filterId.selectedIndex = 0;
+                filterAuthor.selectedIndex = 0;
+                filterCreationDate.selectedIndex = 0;
+                filterUpdateDate.selectedIndex = 0;
+                filterDisplayDate.selectedIndex = 0;
+                filterExpiryDate.selectedIndex = 0;
+                filterActive.selectedIndex = 0;
+                filterApproved.selectedIndex = 0;
+            }
+        </script>
+    </head>
+    <body>
+        <!-- Main Body of Page -->
+        <div class="container">
+            <div th:replace="fragments/topnav :: navbar">
+            </div>
+            <div class="container">
+                <div class="row justify-content-center mb-3">
+                    <div class="col-md-12">
+                        <form th:action="@{/filteredPosts}" method="post">
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label for="filterId">Filter by ID:</label>
+                                    <select class="form-control" id="filterId" name="filterId">
+                                        <option value="">Select the order</option>
+                                        <option value="asc">Ascending</option>
+                                        <option value="desc">Descending</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="filterAuthor">Filter by Author:</label>
+                                    <select class="form-control" id="filterAuthor" name="filterAuthor">
+                                        <option value="">Select the author</option>
+                                        <!-- Loop over unique author names -->
+                                        <option th:each="author : ${uniqueAuthors}" th:text="${author}" th:value="${author}"></option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="filterCreationDate">Filter by Creation Date:</label>
+                                    <select class="form-control" id="filterCreationDate" name="filterCreationDate">
+                                        <option value="">Select the order</option>
+                                        <option value="asc">Ascending</option>
+                                        <option value="desc">Descending</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="filterUpdateDate">Filter by Last Update Date:</label>
+                                    <select class="form-control" id="filterUpdateDate" name="filterUpdateDate">
+                                        <option value="">Select the order</option>
+                                        <option value="asc">Ascending</option>
+                                        <option value="desc">Descending</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="filterDisplayDate">Filter by Display Date:</label>
+                                    <select class="form-control" id="filterDisplayDate" name="filterDisplayDate">
+                                        <option value="">Select the order</option>
+                                        <option value="asc">Ascending</option>
+                                        <option value="desc">Descending</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="filterExpiryDate">Filter by Expiry Date:</label>
+                                    <select class="form-control" id="filterExpiryDate" name="filterExpiryDate">
+                                        <option value="">Select the order</option>
+                                        <option value="asc">Ascending</option>
+                                        <option value="desc">Descending</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="filterActive">Filter by Active:</label>
+                                    <select class="form-control" id="filterActive" name="filterActive">
+                                        <option value="">Select your option</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="filterApproved">Filter by Approved:</label>
+                                    <select class="form-control" id="filterApproved" name="filterApproved">
+                                        <option value="">Select your option</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-secondary" onclick="resetFilters()">Reset Filters</button>
+                            <button type="submit" class="btn btn-primary">Apply Filters</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Table content for approved posts -->
+                <div class="row justify-content-center">
+                    <div class="col-md-12">
+                        <h2>Post List</h2>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>Creation Date</th>
+                                    <th>Last Update Date</th>
+                                    <th>Display Date</th>
+                                    <th>Expiry Date</th>
+                                    <th>Author</th>
+                                    <th>Active</th>
+                                    <th>Approved</th>
+                                    <th>Update</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Use th:if to filter rows based on user input -->
+                                <tr th:each="post : ${postList}">
+                                    <td th:text="${post.postId}"></td>
+                                    <td th:text="${post.title}"></td>
+                                    <td th:text="${post.creationDate}"></td>
+                                    <td th:text="${post.updateDate}"></td>
+                                    <td th:text="${post.displayDate}"></td>
+                                    <td th:text="${post.expiryDate}"></td>
+                                    <td th:text="${post.user.userName}"></td>
+                                    <td th:text="${post.active} ? 'Yes' : 'No'"></td>
+                                    <td th:text="${post.approved} ? 'Yes' : 'No'"></td>
+                                    <td><a href="#" th:href="@{/updatePost(id=${post.postId})}">Update</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>   
+        <!-- End main body -->
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    </body>
+</html>

@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <title>My Blog</title>
+        <style>
+            body {
+                background-color: #f8f9fa;  
+            }
+            /* Add shadow to buttons */
+            .btn {
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Main Body of Page -->
+        <div class="col-custom-width container">
+            <div class="row justify-content-center">
+                <div th:replace="fragments/topnav :: navbar">
+                </div>
+                <div class="col-12 col-custom-width text-center" style="margin-top: 40px;">  <h3>Choose Default Image</h3></div>
+                <div>
+                    <img class="card-img-top" th:if="${base64Image != ''}" th:src="'data:image/jpg;base64,' + ${base64Image}" alt="Card image cap" style="width: 600px; height: 300px;" />
+                    <p th:if="${base64Image == ''}">No default image</p>
+                </div>
+                <div class="col-md-12 col-custom-width" style="margin-top:  40px; ">
+                    <div class="row justify-content-center ">
+                        <div class="col-9 col-custom-width">
+
+                            <form action="addDefaultImage" method="POST" enctype="multipart/form-data" class="form" id="formId" onsubmit="return validateForm()">
+
+                                <!-- Image input field -->
+                                <div class="form-group" id="imageInputContainer" style="display: none;">
+                                    <label for="image">Image (PNG or JPEG, max 5MB)</label>
+                                    <input type="file" name="image" id="image" accept=".png, .jpeg, .jpg" class="form-control-file" >
+                                </div>
+                                <button id="changeImageButton" onclick="toggleImageInput(event, true);" class="btn btn-primary">Change Image</button>
+                                <button id="cancelButton" onclick="toggleImageInput(event, false);" class="btn btn-secondary" style="display: none;">Cancel "Change Image"</button>
+
+                                <input type="hidden" name="changeImage" th:value="${changeImage ? 'true' : 'false'}" />
+
+                                <input type="hidden" name="id" th:value="${userId}"/>
+
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                <div class="col-12 form-group row" style="margin-top: 40px;">
+                                    <div class="col-12 col-custom-width text-center"> 
+                                        <!-- Add the Post button -->
+                                        <button type="submit" class="btn btn-primary" name="save">Save</button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="modal fade" id="alertModalImage" tabindex="-1" role="dialog" aria-labelledby="alertModalImageLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="alertModalImageLabel">Custom Title</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body" id="alertModalImageAlertMessage">
+                                            <!-- Error message will be inserted here dynamically -->
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary" onclick="handleUserResponse(true);" data-dismiss="modal">Yes</button>
+                                            <button type="button" class="btn btn-secondary" onclick="handleUserResponse(false);" data-dismiss="modal">No</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="alertModalUpdate" tabindex="-1" role="dialog" aria-labelledby="alertModalUpdateLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="alertModalUpdateLabel">Custom Title</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body" id="alertModalUpdateAlertMessage">
+                                            <!-- Error message will be inserted here dynamically -->
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary" onclick="handleUserResponse(true);" data-dismiss="modal">Yes</button>
+                                            <button type="button" class="btn btn-secondary" onclick="handleUserResponse(false);" data-dismiss="modal">No</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End main body -->
+        <script>
+            function toggleImageInput(event, showImageInput) {
+                event.preventDefault(); // Prevent the default form submission behavior{
+                var imageInputContainer = document.getElementById('imageInputContainer');
+                var changeImageButton = document.getElementById('changeImageButton');
+                var cancelButton = document.getElementById('cancelButton');
+                var hiddenInput = document.querySelector('input[name="changeImage"]'); // Select the hidden input
+                var image = document.getElementById('image'); // Select the file input
+
+                if (showImageInput) {
+                    imageInputContainer.style.display = 'block';
+                    changeImageButton.style.display = 'none';
+                    cancelButton.style.display = 'block';
+                    changeImage = true;
+                } else {
+                    imageInputContainer.style.display = 'none';
+                    changeImageButton.style.display = 'block';
+                    cancelButton.style.display = 'none';
+                    changeImage = false;
+                    image.value = ''; // Unselect the file
+                }
+
+                // Update the value of the hidden input based on the value of changeImage
+                hiddenInput.value = changeImage ? 'true' : 'false';
+            }
+
+            // Function to handle user response in modal
+            function handleUserResponse(isConfirmed) {
+                console.log("isConfirmed", isConfirmed);
+
+                if (isConfirmed) {
+                    document.getElementById("formId").submit();
+                }
+
+            }
+
+            function validateForm() {
+                var imageInput = document.getElementById('image');
+                var hiddenInput = document.querySelector('input[name="changeImage"]'); // Select the hidden input
+                var changeImage = hiddenInput.value;
+
+                // Check if no image is selected
+                if (imageInput.files.length === 0 && changeImage === true) {
+                    var customTitle = "Validation Error";
+                    var errorMessage = "No image was selected.<br>" +
+                            "Do you want the default image to be blank?";
+
+                    // Display custom alert
+                    document.getElementById("alertModalImageLabel").innerHTML = customTitle;
+                    document.getElementById("alertModalImageAlertMessage").innerHTML = errorMessage;
+                    $('#alertModalImage').modal('show');
+
+                    return false;
+                }
+
+                // Check if changeImage is false and there's a file selected
+                if (!changeImage && imageInput.files.length > 0) {
+                    // Clear the file input by setting its value to an empty string
+                    imageInput.value = '';
+                }
+                alertModalUpdate();
+                return false;
+            }
+
+            function alertModalUpdate() {
+                document.getElementById("alertModalUpdateLabel").innerHTML = "Validation Update";
+                document.getElementById("alertModalUpdateAlertMessage").innerHTML = "Are you sure you want to save the modifications?";
+                $('#alertModalUpdate').modal('show');
+            }
+        </script>
+
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    </body>
+</html>

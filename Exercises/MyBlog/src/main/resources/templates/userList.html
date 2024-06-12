@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <title>My Blog</title>
+        <style>
+            body {
+                background-color: #f8f9fa;  
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Main Body of Page -->
+        <div class="container">
+            <div class="row justify-content-center">
+                <div th:replace="fragments/topnav :: navbar">
+                </div>
+
+                <div class="col-12 col-custom-width text-center" style="margin-top: 40px;">  <h3>User List</h3></div>   
+                <h5 th:text="${registrationSuccess}">User added</h5>
+                <div class="col-12 col-custom-width text-center"  style="margin-top: 40px;">  </div>   
+
+                <div class="col-12 col-custom-width text-center">
+                    <table class="table table-borderless" style="margin-top: 40px;">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Active</th>
+                                <th>Update</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="user : ${users}" th:if="${!user.deleted}">
+                                <td th:text="${user.userId}"></td>
+                                <td th:text="${user.userName}"></td>
+                                <td th:text="${user.active} ? 'Yes' : 'No'"></td>
+                                <td><a href="#" th:href="@{/updateUser(id=${user.userId})}">Update</a></td>
+                                <td><a href="#" th:href="@{/removeUser(id=${user.userId})}" class="delete-link">Delete</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>  
+            </div>
+            <div class="modal fade" id="alertModalUpdate" tabindex="-1" role="dialog" aria-labelledby="alertModalUpdateLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="alertModalUpdateLabel">Custom Title</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="alertModalUpdateAlertMessage">
+                            <!-- Error message will be inserted here dynamically -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="confirmDeleteBtn" data-dismiss="modal">Yes</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>  
+        <!-- End main body -->
+        <!-- Optional JavaScript -->
+        <script>
+            var deleteUrl = "";
+
+            // Function to handle user response in modal
+            document.getElementById("confirmDeleteBtn").onclick = function () {
+                window.location.href = deleteUrl;
+            };
+
+            document.querySelectorAll('.delete-link').forEach(function (element) {
+                element.onclick = function (event) {
+                    event.preventDefault();
+                    deleteUrl = this.getAttribute("href");
+                    document.getElementById("alertModalUpdateLabel").innerText = "Validation Delete";
+                    document.getElementById("alertModalUpdateAlertMessage").innerText = "Are you sure you want to delete this user?";
+                    $('#alertModalUpdate').modal('show');
+                };
+            });
+        </script>
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    </body>
+</html>
