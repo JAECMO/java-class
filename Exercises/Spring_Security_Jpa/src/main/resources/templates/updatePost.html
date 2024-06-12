@@ -303,7 +303,7 @@
 
                 // Validate title
                 if (title === "") {
-                    var customTitle = "Title Validation Error";
+                    var customTitle = "Validation Error";
                     var errorMessage = "Title cannot be empty.";
 
                     // Display custom alert
@@ -317,7 +317,7 @@
 
                 // Validate title length
                 if (title.length > 50) {
-                    var customTitle = "Title Validation Error";
+                    var customTitle = "Validation Error";
                     var errorMessage = "Title should have at most 50 characters.";
 
                     // Display custom alert
@@ -331,7 +331,7 @@
 
                 // Validate body
                 if (body === "") {
-                    var customTitle = "Text Validation Error";
+                    var customTitle = "Validation Error";
                     var errorMessage = "Body cannot be empty.";
 
                     // Display custom alert
@@ -345,7 +345,7 @@
 
                 // Validate body length
                 if (body.length > 1000) {
-                    var customTitle = "Text Validation Error";
+                    var customTitle = "Validation Error";
                     var errorMessage = "Body should have at most 1000 characters.";
 
                     // Display custom alert
@@ -361,22 +361,22 @@
                 var checkboxes = document.querySelectorAll('input[name="selectedTags"]:checked');
 
                 // Check if no checkboxes are selected
-//                if (checkboxes.length === 0) {
-//                    var customTitle = "Validation Error";
-//                    var errorMessage = "Please select at least one tag. This field is required.";
-//
-//                    // Display custom alert
-//                    document.getElementById("customAlertModalLabel").innerHTML = customTitle;
-//                    document.getElementById("customAlertMessage").innerHTML = errorMessage;
-//                    $('#customAlertModal').modal('show');
-//
-//                    // Prevent form submission
-//                    return false;
-//                }
+                if (checkboxes.length === 0) {
+                    var customTitle = "Validation Error";
+                    var errorMessage = "Please select at least one tag. This field is required.";
+
+                    // Display custom alert
+                    document.getElementById("customAlertModalLabel").innerHTML = customTitle;
+                    document.getElementById("customAlertMessage").innerHTML = errorMessage;
+                    $('#customAlertModal').modal('show');
+
+                    // Prevent form submission
+                    return false;
+                }
 
                 // Check if no checkboxes are selected
                 if (checkboxes.length > 3) {
-                    var customTitle = "Tag Validation Error";
+                    var customTitle = "Validation Error";
                     var errorMessage = "Please select a maximum of 3 tags";
 
                     // Display custom alert
@@ -401,7 +401,7 @@
 
                     // If expiry date is not at least 1 day more than display date, show alert
                     if (daysDifference < 1) {
-                        var customTitle = "Date Validation Error";
+                        var customTitle = "Validation Error";
                         var errorMessage = "Expiry date must be at least 1 day after the display date.";
 
                         // Display custom alert
@@ -417,7 +417,7 @@
                 // Check if no image is selected
                 if (imageInput.files.length === 0 && changeImage === 'true') {
 
-                    var customTitle = "Image Validation Error";
+                    var customTitle = "Validation Error";
                     var errorMessage = "No image was selected.<br>" +
                             "Do you want the image to be the default image?";
 
